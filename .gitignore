@@ -1,3 +1,6 @@
+# Project
+.idea/
+
 # Data
 *.tsv
 *.bed
