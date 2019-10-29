@@ -37,11 +37,12 @@ awk '{center=int(($2+$3)/2); $2=center-1000; $3=center+1000; print $1"\t"$2"\t"$
 #  awk '{print $1"\t"$2"\t"$2}' > $MUT_SAMPLE_CENTER
 
 # Perform operations on actual dataset.
-MUT_PREP=data/ssm.open.SKCM-US_prepped.bed
-MUT_DUPE=data/ssm.open.SKCM-US_duplicated.bed
-MUT_UNIQ=data/ssm.open.SKCM-US_unique.bed
-MUT_INTR=data/ssm.open.SKCM-US_intersect.bed
-MUT_CENT=data/ssm.open.SKCM-US_centered.bed
+MUT_FILE_PREFIX=data/ssm.open.SKCM-US
+MUT_PREP="${MUT_FILE_PREFIX}_prepped.bed"
+MUT_DUPE="${MUT_FILE_PREFIX}_duplicated.bed"
+MUT_UNIQ="${MUT_FILE_PREFIX}_unique.bed"
+MUT_INTR="${MUT_FILE_PREFIX}_intersect.bed"
+MUT_CENT="${MUT_FILE_PREFIX}_centered.bed"
 cut -f9-11,16,17 $MUT_FILE |
   sed -e 1d |
   sort -V |
