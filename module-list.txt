@@ -1,0 +1,191 @@
+
+--------------------- /data/itlab/helmod/modulefiles/Core ----------------------
+   AmpliconNoise/1.27-fasrc01              fftw/3.3.5-fasrc01
+   Anaconda/1.9.2-fasrc01                  flex/2.6.0-fasrc01
+   Anaconda/2.1.0-fasrc01                  fontconfig/2.12.0-fasrc01
+   Anaconda/2.5.0-fasrc01                  freebayes/2015Feb18-fasrc01
+   Anaconda/4.3.0-fasrc01           (D)    freetype/2.6.3-fasrc01
+   Anaconda3/2.1.0-fasrc01                 gcc/4.7.4-fasrc01
+   Anaconda3/4.3.0-gcb01            (D)    gcc/4.8.2-fasrc01
+   BEAST/2.4.2-gcb01                       gcc/4.9.3-fasrc01
+   BSMAP/2.90-gcb01                        gcc/5.2.0-fasrc02
+   CLAPACK/3.2.1-gcb01                     gcc/5.3.0-fasrc01
+   GATK/4.0.2.1-gcb01                      gcc/6.2.0-fasrc01
+   GATK/4.1.0.0-gcb01                      gcc/7.1.0-fasrc01
+   GATK/4.1.0.0-gcb02                      gcc/7.3.0-gcb01                 (D)
+   GATK/4.1.3.0-gcb01               (D)    gcta/1.26.0-gcb01
+   GenomeAnalysisTK/3.1.1-gcb01            gd/2.0.28-fasrc01
+   GenomeAnalysisTK/3.5-gcb01              gdal/1.11.1-fasrc01
+   GenomeAnalysisTK/3.7-gcb01              gdal/2.4.1-gcb01                (D)
+   GenomeAnalysisTK/4.0.2.1-fasrc01        ghc/7.6.1-fasrc01
+   GenomeAnalysisTK/4.0.2.1-gcb01          ghc/7.8.3-fasrc01               (D)
+   GenomeAnalysisTK/4.1.0.0-gcb01          git/2.1.0-fasrc01
+   GenomeAnalysisTK/4.1.0.0-gcb02          glib/2.20.4-fasrc01
+   GenomeAnalysisTK/4.1.3.0-gcb01   (D)    glib/2.32.4-fasrc01             (D)
+   HTSeq/0.6.1-fasrc01                     glibc/2.14-gcb01
+   IGV/2.3.61-gcb01                        glibc/2.18-gcb01
+   ImageMagick/7.0.1-fasrc01               glibc/2.20-gcb01                (D)
+   ImageMagick/7.0.1-gcb01          (D)    gmp/5.1.3-fasrc01
+   MACS/1.4.2-fasrc01                      gmp/6.0.0-fasrc01
+   MUMmer/3.23-gcb01                       gmp/6.0.0-fasrc02
+   MaSuRCA/3.2.3-gcb01                     gmp/6.1.0-fasrc01
+   PBSuite/15.8.24-gcb01                   gmp/6.1.1-fasrc02
+   ParsInsert/1.04-fasrc01                 gmp/6.1.2-fasrc01               (D)
+   R/3.1.0-fasrc01                         gnuplot/4.6.4-fasrc02
+   R/3.2.0-gcb01                           golang/1.10.3-gcb01
+   R/3.2.2-fasrc03                         gperf/3.0.4-fasrc01
+   R/3.3.0-fasrc01                         gperf/3.0.4-fasrc02             (D)
+   R/3.3.1-gcb01                           gsl/1.16-fasrc02
+   R/3.4.0-gcb01                           gsl/1.16-fasrc03                (D)
+   R/3.4.2-fasrc01                         gstreamer/0.10.30-fasrc01
+   R/3.5.1-gcb01                           gtool/0.7.5-gcb01
+   R/3.5.3-gcb01                           hdf5/1.8.12-fasrc04
+   R/3.5.3-gcb02                           hdf5/1.8.12-fasrc08
+   R/3.6.1-gcb01                           hdf5/1.8.17-fasrc02             (D)
+   R/3.6.1-gcb02                           htslib/1.1-fasrc01
+   R/3.6.1-gcb03                    (D)    htslib/1.2.1-gcb01
+   R_core/3.1.0-fasrc01                    htslib/1.3.1-gcb01              (D)
+   R_core/3.2.2-fasrc02                    hyphy/20161104-gcb01
+   R_core/3.2.2-fasrc03                    icu4c/54.1-fasrc01
+   R_core/3.3.0-fasrc01                    infernal/1.0.2-fasrc01
+   R_core/3.3.1-gcb01                      java/1.7.0_60-fasrc01
+   R_core/3.4.0-gcb01                      java/1.8.0_45-fasrc01
+   R_core/3.4.2-fasrc01                    java/9-gcb01                    (D)
+   R_core/3.5.1-gcb01                      jdk/1.7.0_60-fasrc01
+   R_core/3.5.3-gcb01                      jdk/1.8.0_45-fasrc01
+   R_core/3.5.3-gcb02                      jdk/9-gcb01                     (D)
+   R_core/3.6.1-gcb01                      jpeg/6b-fasrc02
+   R_core/3.6.1-gcb02                      kallisto/0.42.4-gcb01
+   R_core/3.6.1-gcb03               (D)    kentUtils/v302-gcb01
+   R_packages/3.1.0-fasrc01                lapack/3.6.1-gcb01
+   R_packages/3.2.2-fasrc03                libffi/3.2.1-fasrc01
+   R_packages/3.3.0-fasrc01                libpng/1.5.21-fasrc01
+   R_packages/3.3.0-fasrc02                libpng/1.6.23-fasrc01           (D)
+   R_packages/3.3.1-gcb01                  libxml2/2.7.8-fasrc01
+   R_packages/3.4.0-gcb01                  libxml2/2.7.8-fasrc02           (D)
+   R_packages/3.4.2-fasrc01                llvm/3.5.1-fasrc02
+   R_packages/3.5.1-gcb01                  lynx/2.8.8-gcb01
+   R_packages/3.5.3-gcb01                  macs2/2.1.0.20140616-fasrc01
+   R_packages/3.5.3-gcb02                  macs2/2.1.2.20181108-gcb01      (D)
+   R_packages/3.6.1-gcb02                  matlab/R2014b-gcb01
+   R_packages/3.6.1-gcb03           (D)    matlab/R2015a-gcb01
+   Rmpi/0.6.6-gcb01                        matlab/R2017b-gcb01
+   Rmpi/0.6.9-gcb01                 (D)    matlab/R2018b-gcb01             (D)
+   STAR/2.5.0c-fasrc01                     mbuffer/20180625-gcb01
+   STAR/2.7.2b-gcb01                (D)    meraculous/2.0.5-gcb01
+   SeqPrep/1.1-fasrc01                     mongodb/2.7.4-fasrc01
+   TrimGalore/0.4.1-gcb01                  mongodb/3.2.8-gcb01             (D)
+   VEP/84-gcb01                            mothur/1.25.0-fasrc01
+   autoconf/2.69-fasrc01                   mpc/1.0.1-fasrc01
+   automake/1.15.1-gcb01                   mpc/1.0.2-fasrc01
+   bazel/20160330-fasrc01                  mpc/1.0.2-fasrc03
+   bcftools/1.2-fasrc01                    mpc/1.0.3-fasrc01
+   bcftools/1.3.1-gcb01             (D)    mpc/1.0.3-fasrc04
+   bcl2fastq2/v2.20.0.422-gcb01            mpc/1.0.3-fasrc06               (D)
+   bcl2fastq2/2.15.0.4-fasrc02             mpfr/3.1.2-fasrc01
+   bcl2fastq2/2.17.1.14-gcb01       (D)    mpfr/3.1.2-fasrc02
+   beagle/2.1.2-gcb01                      mpfr/3.1.3-fasrc01
+   bedops/2.4.35-gcb01                     mpfr/3.1.4-fasrc02
+   bedtools2/2.19.1-gcb01                  mpfr/3.1.5-fasrc01              (D)
+   bedtools2/2.25.0-fasrc01         (D)    muscle/3.8.31-fasrc01
+   binutils/2.26-fasrc02                   ncbi-blast/2.2.22-fasrc01
+   binutils/2.33.1-gcb01            (D)    ncbi-blast/2.3.0+-gcb01         (D)
+   bioawk/1.0-gcb01                        netcdf/4.3.2-fasrc03
+   bismark/0.17.0-gcb01                    node/8.11.3-gcb01
+   blasr/20170124-gcb01                    openmpi/1.10.7-gcb01
+   blasr/20171009-gcb01                    openmpi/3.1.3-gcb01             (D)
+   blasr/20171011-gcb01             (D)    orc/0.4.24-fasrc01
+   blat/3.5-gcb01                          parallel/20160322-fasrc01
+   boost/1.54.0-fasrc01                    pcre/8.37-fasrc02
+   boost/1.55.0-fasrc01                    perl/5.10.1-fasrc01
+   boost/1.59.0-gcb01               (D)    perl/5.10.1-fasrc04             (D)
+   bowtie/1.1.1-fasrc01                    perl-modules/5.10.1-fasrc11
+   bowtie2/2.2.2-fasrc01                   phred/020425-gcb01
+   bowtie2/2.2.4-fasrc01                   picard-tools/2.4.1-gcb01
+   bowtie2/2.3.4.3-gcb01            (D)    pigz/2.3.4-gcb01
+   bwa/0.7.12-gcb01                        plink/1.07-fasrc01
+   bzip2/1.0.6-fasrc01                     plink/1.90-fasrc01
+   cairo/1.8.8-fasrc01                     plink/1.90.3.36-gcb01           (D)
+   cairo/1.12.18-fasrc01                   postgresql/9.4.1-fasrc02
+   cairo/1.12.18-gcb01              (D)    pplacer/1.0.0-fasrc01
+   canu/1.7.1-gcb01                        python/2.7.6-fasrc01
+   cd-hit/3.1.1-fasrc01                    python/2.7.8-fasrc02
+   cdbfasta/1.0.0-fasrc01                  python/2.7.9-fasrc01
+   cellranger/3.0.1-gcb01                  python/2.7.11-fasrc01
+   cellranger/3.1.0-gcb01           (D)    python/3.4.1-fasrc01            (D)
+   cellranger_atac/1.1.0-gcb01             qiime/1.9.1-fasrc01
+   cfitsio/3390-fasrc01                    qiime-dependencies/1.9-fasrc01
+   chimeraslayer/2011.05.19-fasrc01        qiime-packages/1.9.1-fasrc01
+   clearcut/1.0.9-fasrc01                  qpy/2.7.10-fasrc01
+   cmake/2.8.12.2-fasrc01                  qt/5.5.1-fasrc01
+   cmake/3.5.2-fasrc01              (D)    qt-creator/3.5.1-fasrc01
+   cmdstan/2.12.0-fasrc01                  raxml/7.3.0-fasrc01
+   coreutils/8.25-gcb01                    readline/6.3-fasrc01
+   cuda/7.5-fasrc01                        root/5.34.05-gcb01
+   cudnn/7.0-fasrc01                       root/6.02.10-fasrc01            (D)
+   cufflinks/2.2.1-fasrc01                 rtax/0.984-fasrc01
+   curl/7.45.0-fasrc01                     ruby/2.1.1-fasrc01
+   cutadapt/1.8.1-gcb01                    sambamba/0.6.7-gcb01
+   cutadapt/1.8.3-gcb01                    samblaster/0.1.24-gcb01
+   cutadapt/2.3-gcb01               (D)    samtools/0.1.19-fasrc01
+   cwlref-runner/1.0-gcb01                 samtools/1.1-fasrc02
+   cwlref-runner/1.0-gcb02          (D)    samtools/1.2-fasrc01
+   cwltool/1.0.20180711112827-gcb01        samtools/1.3.1-gcb01
+   cytoscape/2.7.0-fasrc01                 samtools/1.9-gcb01              (D)
+   ddsclient/0.3.5-gcb01                   scalapack/2.0.2-gcb01
+   ddsclient/0.3.6-gcb01                   scons/2.3.6-fasrc01
+   ddsclient/0.3.10-gcb01                  singularity/2.3.1-gcb01
+   ddsclient/0.3.12-gcb01                  singularity/2.4.2-gcb01         (D)
+   ddsclient/0.3.13-gcb01                  snpEff/4.1-gcb01
+   ddsclient/0.3.16-gcb01                  snpEff/4.3i-gcb01               (D)
+   ddsclient/0.3.17-gcb01                  snptest/2.5.2-gcb01
+   ddsclient/0.3.18-gcb01                  spark/2.3.0-gcb01
+   ddsclient/0.3.19-gcb01                  speedseq/0.1.2-gcb01
+   ddsclient/0.3.20-gcb01                  speedseq/0.1.2-gcb02
+   ddsclient/0.3.21-gcb01                  speedseq/0.1.2-gcb03            (D)
+   ddsclient/0.3.22-gcb01                  sqlite/3.12.2-gcb01
+   ddsclient/0.3.23-gcb01                  sratoolkit/2.7.0-fasrc01
+   ddsclient/0.3.24-gcb01                  sratoolkit/2.8.1-gcb01
+   ddsclient/1.0.0-gcb01                   sratoolkit/2.9.6-gcb01          (D)
+   ddsclient/1.0.1-gcb01                   stampy/1.0.28-fasrc01
+   ddsclient/1.0.2-gcb01                   szip/2.1-fasrc01
+   ddsclient/1.0.3-gcb01                   szip/2.1-fasrc02                (D)
+   ddsclient/1.0.4-gcb01                   tabix/0.2.6-fasrc01
+   ddsclient/1.0.5-gcb01                   tbb/4.4-fasrc02
+   ddsclient/2.0.0-gcb01                   tensorflow/20160511-fasrc02
+   ddsclient/2.0.1-gcb01                   texlive/20170520-gcb01
+   ddsclient/2.0.2-gcb01                   tophat/2.0.13-gcb01
+   ddsclient/2.1.0-gcb01                   trinityrnaseq/2.0.6-fasrc01
+   ddsclient/2.1.1-gcb01                   trinityrnaseq/2.6.6-gcb01       (D)
+   ddsclient/2.1.2-gcb01                   ucsc/20150820-fasrc01
+   ddsclient/2.1.3-gcb01                   udunits/2.2.26-gcb01
+   ddsclient/2.1.4-gcb01                   unixODBC/2.3.6-gcb01
+   ddsclient/2.2.0-gcb01                   usearch/5.2.236-fasrc01
+   ddsclient/2.2.1-gcb01                   usearch/9.0.2132-gcb01          (D)
+   ddsclient/2.3.1-gcb01                   vawk/0.0.1-gcb01
+   ddsclient/2.3.2-gcb01                   vcflib/2015Feb18-fasrc01
+   ddsclient/2.3.3-gcb01                   vcftools/0.1.11-fasrc01
+   ddsclient/2.3.4-gcb01                   vcftools/0.1.12b-gcb01
+   ddsclient/2.4.0-gcb01            (D)    vcftools/0.1.13-gcb01
+   deepTools/2.0-gcb01                     vcftools/0.1.15-gcb01           (D)
+   drm_tools/1.1.29-gcb01                  velvet/1.2.10-fasrc04
+   ea-utils/1.1.2.537-fasrc01              virtualenv/12.1.1-fasrc02
+   eigen/3.2.2-fasrc01                     virtualenvwrapper/4.6.0-fasrc01
+   emacs/24.3-fasrc01                      xz/5.2.2-fasrc01
+   emboss/6.6.0-fasrc01                    xz/5.2.2-gcb01                  (D)
+   expat/2.1.0-fasrc01                     zlib/1.2.8-fasrc02
+   expat/2.1.0-fasrc03                     zlib/1.2.8-fasrc05
+   expat/2.2.7-gcb01                (D)    zlib/1.2.8-fasrc06
+   fastqc/0.11.2-fasrc01                   zlib/1.2.8-fasrc07              (D)
+   fastqc/0.11.5-fasrc01            (D)
+
+-------------- /data/itlab/helmod/apps/lmod/lmod/modulefiles/Core --------------
+   lmod/5.9.3    settarg/5.9.3
+
+  Where:
+   (D):  Default Module
+
+Use "module spider" to find all possible modules.
+Use "module keyword key1 key2 ..." to search for all possible modules matching
+any of the "keys".
+

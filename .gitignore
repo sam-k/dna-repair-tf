@@ -2,6 +2,12 @@
 .idea/
 
 # Data
+data/
+logs/
 *.tsv
 *.bed
 *.out
+
+# Misc
+.DS_Store
+._*
