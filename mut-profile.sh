@@ -8,7 +8,7 @@ TFBS_DATASET=skcm
 
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 TFBS_FILE="../datasets/proximalTFBS-DHS_${TFBS_DATASET}.bed"
-# TFBS_DHS_FILE="../datasets/proximalTFBS-noDHS_${TFBS_DATASET}.bed"
+# TFBS_NODHS_FILE="../datasets/proximalTFBS-noDHS_${TFBS_DATASET}.bed"
 
 ## MUT_FILE:
 #  Mutation locations on patient genomes
@@ -106,12 +106,13 @@ bedtools intersect -a $MUT_PREP -b $TFBS_CNTR -wa -wb | # intersect with TFBS ±
 #  7. transcription_factor
 
 MUT_CNTR="${MUT_FILE_PREFIX}_centered.bed"
-cut -f1,6-7 $MUT_INTR |
-  awk '{print $1"\t"$2"\t"$2"\t"$3}' > $MUT_CNTR
+cut -f1,4,6-7 $MUT_INTR |
+  awk '{print $1"\t"$3"\t"$3"\t"$2"\t"$4}' > $MUT_CNTR
 
 ## MUT_CNTR:
 #  Mut locations as distances from centers of ±1000bp TFBS regions
 #  1. chromosome
 #  2. mutation_distance_from_center
 #  3. mutation_distance_from_center
-#  4. transcription_factor
+#  4. mutation_allele
+#  5. transcription_factor
