@@ -91,7 +91,8 @@ cut -f9-11,16,17 $MUT_FILE | # select cols
   uniq | # remove duplicates
   bedtools intersect -a - -b $TFBS_CNTR -wa -wb | # intersect with TFBS ±1000bp regions
   cut -f1-2,4,6,8 |
-  awk '{dist=$2-$4-1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' > $MUT_CNTR
+  awk '{dist=$2-$4-1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |
+  sort -V > $MUT_CNTR
 
 ## MUT_CNTR:
 #  Mut locations as distances from centers of ±1000bp TFBS regions

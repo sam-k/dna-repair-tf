@@ -93,7 +93,8 @@ cut -f9-11,16,17 $MUT_FILE | # select cols
 MUT_INTR="${MUT_FILE_PREFIX}_intersect.bed"
 bedtools intersect -a $MUT_PREP -b $TFBS_CNTR -wa -wb | # intersect with TFBS ±1000bp regions
   cut -f1-2,4,6,8 |
-  awk '{center=$4+1000; print $1"\t"$2"\t"$2"\t"$3"\t"center"\t"($2-center)"\t"$5}' > $MUT_INTR
+  awk '{center=$4+1000; print $1"\t"$2"\t"$2"\t"$3"\t"center"\t"($2-center)"\t"$5}' |
+  sort -V > $MUT_INTR
 
 ## MUT_INTR:
 #  Mut locations that are in ±1000bp TFBS regions
