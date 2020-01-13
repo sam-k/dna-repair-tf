@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --job-name mut-profile-SKCM
+#SBATCH --job-name mut-profile
 #SBATCH --mail-user sdk18@duke.edu
 #SBATCH --mail-type END,FAIL
 #SBATCH --time 12:00:00
 #SBATCH -c 2
-#SBATCH --output logs/mut-profile-SKCM-DHS.cl.out
-#SBATCH --error logs/mut-profile-SKCM-DHS.cl.err
+#SBATCH --output logs/mut-profile-DHS.cl.out
+#SBATCH --error logs/mut-profile-DHS.cl.err
 
 ### Run on full data using cluster
 
