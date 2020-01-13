@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name mut-profile-SKCM
 #SBATCH --mail-user sdk18@duke.edu
-#SBATCH --mail-type ALL
+#SBATCH --mail-type END,FAIL
 #SBATCH --time 12:00:00
 #SBATCH -c 2
 #SBATCH --output logs/mut-profile-SKCM-DHS.cl.out
@@ -82,7 +82,7 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 #  3. region_end_pos1000
 #  4. transcription_factor
 
-MUT_CNTR="$./data/ssm.open.${MUT_DATASET}_centered.bed"
+MUT_CNTR="./data/ssm.open.${MUT_DATASET}_centered.bed"
 cut -f9-11,16,17 $MUT_FILE | # select cols
   sed -e 1d | # remove header
   sort -V | # sort
