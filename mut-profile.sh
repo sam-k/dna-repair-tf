@@ -76,8 +76,9 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 
 MUT_FILE_PREFIX="./data/ssm.open.${MUT_DATASET}"
 MUT_PREP="${MUT_FILE_PREFIX}_prepped.bed"
-cut -f9-11,16,17 $MUT_FILE | # select cols
-  sed -e 1d | # remove header
+cut -f9-11,16,17,34 $MUT_FILE | # select cols
+  awk '$6=="WGS"' | # get only WGS
+  cut -f1-5 | # remove sequencing_strategy col
   sort -V | # sort
   sed -e $'s/\t/>/4' | # preprocess to BED format
   sed -e 's/^/chr/' |

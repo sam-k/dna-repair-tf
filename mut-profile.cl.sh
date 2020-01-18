@@ -11,7 +11,7 @@
 
 module load bedtools2
 
-MUT_DATASET=SKCM-US
+MUT_DATASET=MELA-AU
 TFBS_DATASET=skcm
 
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
@@ -83,8 +83,9 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 #  4. transcription_factor
 
 MUT_CNTR="./data/ssm.open.${MUT_DATASET}_centered.bed"
-cut -f9-11,16,17 $MUT_FILE | # select cols
-  sed -e 1d | # remove header
+cut -f9-11,16,17,34 $MUT_FILE | # select cols
+  awk '$6=="WGS"' | # get only WGS
+  cut -f1-5 | # remove sequencing_strategy col
   sort -V | # sort
   sed -e $'s/\t/>/4' | # preprocess to BED format
   sed -e 's/^/chr/' |

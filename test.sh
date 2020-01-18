@@ -14,5 +14,10 @@ MUT_CNTR="${MUT_FILE_PREFIX}_centered.bed"
 TFBS_FILE="../datasets/proximalTFBS-DHS_${TFBS_DATASET}.bed"
 TFBS_CNTR="./data/sample.proximalTFBS-DHS_${TFBS_DATASET}_center1000.bed"
 
-cut -f1,6-7 $MUT_INTR |
-  awk '{print $1"\t"$2"\t"$2"\t"$3}' > $MUT_CNTR
+cut -f9-11,16,17,34 $MUT_FILE | # select cols
+  awk '$6=="WGS"' | # get only WGS
+  cut -f1-5 | # remove sequencing_strategy col
+  sort -V | # sort
+  sed -e $'s/\t/>/4' | # preprocess to BED format
+  sed -e 's/^/chr/' |
+  uniq > $MUT_PREP # remove duplicates
