@@ -5,8 +5,8 @@
 MUT_DATASET=SKCM-US
 TFBS_DATASET=skcm
 
-MUT_FILE="./data/sample.ssm.open.${MUT_DATASET}.tsv"
-MUT_FILE_PREFIX="./data/sample.ssm.open.${MUT_DATASET}"
+MUT_FILE="./temp_data/sample.ssm.open.${MUT_DATASET}.tsv"
+MUT_FILE_PREFIX="./temp_data/sample.ssm.open.${MUT_DATASET}"
 MUT_PREP="${MUT_FILE_PREFIX}_prepped.bed"
 MUT_INTR="${MUT_FILE_PREFIX}_intersect.bed"
 MUT_CNTR="${MUT_FILE_PREFIX}_centered.bed"

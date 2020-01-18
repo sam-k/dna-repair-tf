@@ -1,7 +1,8 @@
 #!/bin/bash
 
-### Run locally on small sample of data
-# bedtools2 module only works locally and on cluster
+### Creates intermediate files for debugging.
+### Run locally on small sample of data.
+# bedtools2 module only works locally and on cluster.
 
 MUT_DATASET=SKCM-US
 TFBS_DATASET=skcm
