@@ -1,14 +1,16 @@
 #!/bin/bash
-#SBATCH --job-name mut-profile
+#SBATCH --job-name mut-prof_WGS
 #SBATCH --mail-user sdk18@duke.edu
 #SBATCH --mail-type END,FAIL
 #SBATCH --time 12:00:00
 #SBATCH -c 4
-#SBATCH --output logs/mut-profile-noDHS.cl.out
-#SBATCH --error logs/mut-profile-noDHS.cl.err
+#SBATCH --output logs/mut-profile_WGS.cl.out
+#SBATCH --error logs/mut-profile_WGS.cl.err
 
-### Does not produce intermediate files.
-### Run on full data using cluster.
+## Intersects somatic mutation coords w/ TFBS coords.
+## Mutation file is filtered for WGS.
+#  Does not produce intermediate files.
+#  Run on full data using cluster.
 
 module load bedtools2
 
