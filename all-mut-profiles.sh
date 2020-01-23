@@ -1,7 +1,20 @@
 #!/bin/bash
 
-### Calls mut-profile.sh on all datasets.
-### Run on all datasets using cluster.
+### Calls mut-profile_TYPE.cl.sh on all datasets, as specified.
+
+FILENAME="./mut-profile_noncoding.cl.sh"
+
+## FILENAME:
+#  Bash script filename to be called.
+#  ./mut-profile_wgs.cl.sh
+#  ./mut-profile_noncoding.cl.sh
+
+DHS="DHS"
+
+## DHS:
+#  Whether to use DHS or noDHS TFBS file.
+#  DHS
+#  noDHS
 
 declare -a mut=(
   "BLCA"  "BRCA"  "COAD"  "COCA"  "HNSC"  "LUAD"  "LUSC"
@@ -13,5 +26,5 @@ declare -a tfbs=(
 )
 
 for ((i=0;i<${#mut[@]};++i)); do
-    sbatch ./mut-profile.cl.sh "${mut[i]}" "${tfbs[i]}" "DHS"
+    sbatch "${FILENAME}" "${mut[i]}" "${tfbs[i]}" "${DHS}"
 done

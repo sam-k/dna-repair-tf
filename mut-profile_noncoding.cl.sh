@@ -19,6 +19,7 @@ TFBS_DATASET="$2"
 DHS="$3"
 
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
+CODING_FILE="../datasets/coding_exons.bed"
 TFBS_FILE="../datasets/proximalTFBS-${DHS}_${TFBS_DATASET}.bed"
 
 ## MUT_FILE:
@@ -74,7 +75,7 @@ TFBS_FILE="../datasets/proximalTFBS-${DHS}_${TFBS_DATASET}.bed"
 #  4. transcription_factor
 
 # Transform TFBSs into TFBS centers ±1000 bp.
-TFBS_CNTR="./data/proximalTFBS-${DHS}_${TFBS_DATASET}_center1000.bed"
+TFBS_CNTR="./data/supplementary/proximalTFBS-${DHS}_${TFBS_DATASET}_center1000.bed"
 awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' $TFBS_FILE |
   sort -V > $TFBS_CNTR
 
