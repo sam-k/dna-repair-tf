@@ -13,5 +13,5 @@ declare -a tfbs=(
 )
 
 for ((i=0;i<${#mut[@]};++i)); do
-    sbatch ./mut-profile.cl.sh "${mut[i]}" "${tfbs[i]}"
+    sbatch ./mut-profile.cl.sh "${mut[i]}" "${tfbs[i]}" "DHS"
 done

@@ -4,8 +4,8 @@
 #SBATCH --mail-type END,FAIL
 #SBATCH --time 12:00:00
 #SBATCH -c 4
-#SBATCH --output logs/mut-profile-DHS.cl.out
-#SBATCH --error logs/mut-profile-DHS.cl.err
+#SBATCH --output logs/mut-profile-noDHS.cl.out
+#SBATCH --error logs/mut-profile-noDHS.cl.err
 
 ### Does not produce intermediate files.
 ### Run on full data using cluster.
@@ -14,10 +14,10 @@ module load bedtools2
 
 MUT_DATASET="$1"
 TFBS_DATASET="$2"
+DHS="$3"
 
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
-TFBS_FILE="../datasets/proximalTFBS-DHS_${TFBS_DATASET}.bed"
-# TFBS_NODHS_FILE="../datasets/proximalTFBS-noDHS_${TFBS_DATASET}.bed"
+TFBS_FILE="../datasets/proximalTFBS-${DHS}_${TFBS_DATASET}.bed"
 
 ## MUT_FILE:
 #  Mutation locations on patient genomes
@@ -72,7 +72,7 @@ TFBS_FILE="../datasets/proximalTFBS-DHS_${TFBS_DATASET}.bed"
 #  4. transcription_factor
 
 # Transform TFBSs into TFBS centers ±1000 bp.
-TFBS_CNTR="./data/proximalTFBS-DHS_${TFBS_DATASET}_center1000.bed"
+TFBS_CNTR="./data/proximalTFBS-${DHS}_${TFBS_DATASET}_center1000.bed"
 awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' $TFBS_FILE |
   sort -V > $TFBS_CNTR
 
@@ -83,7 +83,7 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 #  3. region_end_pos1000
 #  4. transcription_factor
 
-MUT_CNTR="./data/ssm.open.${MUT_DATASET}_centered.bed"
+MUT_CNTR="./data/ssm.open.${DHS}_${MUT_DATASET}_centered.bed"
 cut -f9-11,16,17,34 $MUT_FILE | # select cols
   awk '$6=="WGS"' | # get only WGS
   cut -f1-5 | # remove sequencing_strategy col
