@@ -3,10 +3,11 @@
 ### Calls mut-profile_TYPE.cl.sh on all datasets, as specified.
 
 FILENAME="./mut-profile_noncoding.cl.sh"
-DHS="DHS"
+DHS="noDHS"
 
 ## FILENAME:
 #  Bash script filename to be called.
+#  ./mut-profile.cl.sh
 #  ./mut-profile_wgs.cl.sh
 #  ./mut-profile_noncoding.cl.sh
 

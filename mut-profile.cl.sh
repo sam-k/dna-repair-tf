@@ -1,14 +1,13 @@
 #!/bin/bash
-#SBATCH --job-name mut-prof_WGS
+#SBATCH --job-name mut-prof
 #SBATCH --mail-user sdk18@duke.edu
 #SBATCH --mail-type END,FAIL
 #SBATCH --time 12:00:00
 #SBATCH -c 4
-#SBATCH --output logs/mut-profile_WGS.cl.out
-#SBATCH --error logs/mut-profile_WGS.cl.err
+#SBATCH --output logs/mut-profile.cl.out
+#SBATCH --error logs/mut-profile.cl.err
 
 ## Intersects somatic mutation coords w/ TFBS coords.
-## Mutation file is filtered for WGS.
 #  Does not produce intermediate files.
 #  Run on full data using cluster.
 
@@ -85,10 +84,8 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 #  3. region_end_pos1000
 #  4. transcription_factor
 
-MUT_CNTR="./data/ssm.open.WGS_${DHS}_${MUT_DATASET}_centered.bed"
-cut -f9-11,16,17,34 "${MUT_FILE}" | # select cols
-  awk '$6=="WGS"' | # get only WGS
-  cut -f1-5 | # remove sequencing_strategy col
+MUT_CNTR="./data/ssm.open.${DHS}_${MUT_DATASET}_centered.bed"
+cut -f9-11,16,17 "${MUT_FILE}" | # select cols
   sort -V | # sort
   sed -e $'s/\t/>/4' | # preprocess to BED format
   sed -e 's/^/chr/' |

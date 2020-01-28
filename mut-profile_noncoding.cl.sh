@@ -19,7 +19,8 @@ TFBS_DATASET="$2"
 DHS="$3"
 
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
-CODING_FILE="../datasets/coding_exons.bed"
+CDS_FILE="../datasets/coding_exons.bed"
+GEN_FILE="../datasets/human.hg38.genome"
 TFBS_FILE="../datasets/proximalTFBS-${DHS}_${TFBS_DATASET}.bed"
 
 ## MUT_FILE:
@@ -67,6 +68,22 @@ TFBS_FILE="../datasets/proximalTFBS-${DHS}_${TFBS_DATASET}.bed"
 # 41. raw_data_accession
 # 42. initial_data_release_date
 
+## CDS_FILE:
+#  Coding regions on genome
+#  1. chromosome
+#  2. chromosome_start
+#  3. chromosome_end
+#  4. name
+#  5. score
+#  6. strand
+#  NC1 : coding_exons.bed
+#  NC2 : cds.regions
+
+## GEN_FILE:
+#  Lengths of each chromosome (1-26/M/X/Y) in genome
+#  1. chromosome
+#  2. length
+
 ## TFBS_FILE:
 #  Transcription factor-binding sites on genome
 #  1. chromosome
@@ -74,10 +91,16 @@ TFBS_FILE="../datasets/proximalTFBS-${DHS}_${TFBS_DATASET}.bed"
 #  3. chromosome_end
 #  4. transcription_factor
 
+# Complement coding regions to get noncoding regions.
+NONCODING="./data/supplementary/cds_regions_complement.bed"
+grep -P '^chr(\d+|[MXY])\t' "${CDS_FILE}" | # remove alt chr coords
+  sort -V |
+  bedtools complement -i - -g "${GEN_FILE}" > "${NONCODING}"
+
 # Transform TFBSs into TFBS centers ±1000 bp.
 TFBS_CNTR="./data/supplementary/proximalTFBS-${DHS}_${TFBS_DATASET}_center1000.bed"
-awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' $TFBS_FILE |
-  sort -V > $TFBS_CNTR
+awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' "${TFBS_FILE}" |
+  sort -V > "${TFBS_CNTR}"
 
 ## TFBS_CNTR:
 #  Region of ±1000 bp around center of each TFBS
@@ -86,18 +109,17 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 #  3. region_end_pos1000
 #  4. transcription_factor
 
-MUT_CNTR="./data/ssm.open.${DHS}_${MUT_DATASET}_centered.bed"
-cut -f9-11,16,17,34 $MUT_FILE | # select cols
-  awk '$6=="WGS"' | # get only WGS
-  cut -f1-5 | # remove sequencing_strategy col
+MUT_CNTR="./data/ssm.open.NC_${DHS}_${MUT_DATASET}_centered.bed"
+cut -f9-11,16-17 "${MUT_FILE}" | # select cols
   sort -V | # sort
   sed -e $'s/\t/>/4' | # preprocess to BED format
   sed -e 's/^/chr/' |
   uniq | # remove duplicates
-  bedtools intersect -a - -b $TFBS_CNTR -wa -wb -sorted | # intersect with TFBS ±1000bp regions
+  bedtools intersect -a - -b "${NONCODING}" -wa -sorted | # intersect with noncoding regions
+  bedtools intersect -a - -b "${TFBS_CNTR}" -wa -wb -sorted | # intersect with TFBS ±1000bp regions
   cut -f1-2,4,6,8 |
   awk '{dist=$2-$4-1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |
-  sort -V > $MUT_CNTR
+  sort -V > "${MUT_CNTR}"
 
 ## MUT_CNTR:
 #  Mut locations as distances from centers of ±1000bp TFBS regions
