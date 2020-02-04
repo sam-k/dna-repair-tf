@@ -19,7 +19,7 @@ TFBS_DATASET="$2"
 DHS="$3"
 
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
-TFBS_FILE="../datasets/proximalTFBS-${DHS}_${TFBS_DATASET}.bed"
+TFBS_FILE="../datasets/distalTFBS-${DHS}_${TFBS_DATASET}.bed"
 
 ## MUT_FILE:
 #  Mutation locations on patient genomes
@@ -74,7 +74,7 @@ TFBS_FILE="../datasets/proximalTFBS-${DHS}_${TFBS_DATASET}.bed"
 #  4. transcription_factor
 
 # Transform TFBSs into TFBS centers ±1000 bp.
-TFBS_CNTR="./data/supplementary/proximalTFBS-${DHS}_${TFBS_DATASET}_center1000.bed"
+TFBS_CNTR="./data/supplementary/distalTFBS-${DHS}_${TFBS_DATASET}_center1000.bed"
 awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' "${TFBS_FILE}" |
   sort -V > "${TFBS_CNTR}"
 
@@ -85,7 +85,7 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 #  3. region_end_pos1000
 #  4. transcription_factor
 
-MUT_CNTR="./data/ssm.open.WGS_${DHS}_${MUT_DATASET}_centered.bed"
+MUT_CNTR="./data/ssm.open.distalTFBS_WGS_${DHS}_${MUT_DATASET}_centered.bed"
 cut -f9-11,16,17,34 "${MUT_FILE}" | # select cols
   awk '$6=="WGS"' | # get only WGS
   cut -f1-5 | # remove sequencing_strategy col

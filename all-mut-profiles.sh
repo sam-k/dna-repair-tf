@@ -3,7 +3,7 @@
 ### Calls mut-profile_TYPE.cl.sh on all datasets, as specified.
 
 FILENAME="./mut-profile_noncoding.cl.sh"
-DHS="noDHS"
+DHS="DHS"
 
 ## FILENAME:
 #  Bash script filename to be called.
@@ -16,13 +16,19 @@ DHS="noDHS"
 #  DHS
 #  noDHS
 
+# declare -a mut=(
+#   "BLCA"  "BRCA"  "COAD"  "COCA"  "HNSC"  "LUAD"  "LUSC"
+#   "MELA"  "READ"  "SKCA"  "SKCM"
+# )
 declare -a mut=(
-  "BLCA"  "BRCA"  "COAD"  "COCA"  "HNSC"  "LUAD"  "LUSC"
   "MELA"  "SKCA"  "SKCM"
 )
+# declare -a tfbs=(
+#   "blca"  "brca"  "crc"   "crc"   "hnsc"  "luad_lusc" "luad_lusc"
+#   "skcm"  "crc"   "skcm"  "skcm"
+# )
 declare -a tfbs=(
-  "blca"  "brca"  "crc"   "crc"   "hnsc"  "luad_lusc" "luad_lusc"
-  "skcm"  "skcm"  "skcm"
+  "skcm"
 )
 
 for ((i=0;i<${#mut[@]};++i)); do
