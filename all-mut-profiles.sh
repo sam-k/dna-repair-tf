@@ -16,19 +16,14 @@ DHS="DHS"
 #  DHS
 #  noDHS
 
-# declare -a mut=(
-#   "BLCA"  "BRCA"  "COAD"  "COCA"  "HNSC"  "LUAD"  "LUSC"
-#   "MELA"  "READ"  "SKCA"  "SKCM"
-# )
 declare -a mut=(
-  "MELA"  "SKCA"  "SKCM"
+  "BLCA"  "BRCA"  "COAD"  "COCA"  "HNSC"  "LUAD"  "LUSC"
+  "MELA"  "READ"  "SKCA"  "SKCM"
 )
-# declare -a tfbs=(
-#   "blca"  "brca"  "crc"   "crc"   "hnsc"  "luad_lusc" "luad_lusc"
-#   "skcm"  "crc"   "skcm"  "skcm"
-# )
+
 declare -a tfbs=(
-  "skcm"
+  "blca"  "brca"  "crc"   "crc"   "hnsc"  "luad_lusc" "luad_lusc"
+  "skcm"  "crc"   "skcm"  "skcm"
 )
 
 for ((i=0;i<${#mut[@]};++i)); do
