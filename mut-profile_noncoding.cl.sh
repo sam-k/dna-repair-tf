@@ -23,6 +23,8 @@ CDS_FILE="../datasets/cds.regions"
 GEN_FILE="../datasets/human.hg38.genome"
 TFBS_FILE="../datasets/distalTFBS-${DHS}_${TFBS_DATASET}.bed"
 
+MUT_CNTR="./data/ssm.open.NC2_${DHS}_${MUT_DATASET}_centered.bed"
+
 ## MUT_FILE:
 #  Mutation locations on patient genomes
 #  1. icgc_mutation_id
@@ -109,7 +111,6 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 #  3. region_end_pos1000
 #  4. transcription_factor
 
-MUT_CNTR="./data/ssm.open.distalTFBS_NC2_${DHS}_${MUT_DATASET}_centered.bed"
 cut -f9-11,16-17 "${MUT_FILE}" | # select cols
   sort -V | # sort
   sed -e $'s/\t/>/4' | # preprocess to BED format

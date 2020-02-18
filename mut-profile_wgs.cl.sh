@@ -21,6 +21,8 @@ DHS="$3"
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 TFBS_FILE="../datasets/distalTFBS-${DHS}_${TFBS_DATASET}.bed"
 
+MUT_CNTR="./data/ssm.open.WGS_${DHS}_${MUT_DATASET}_centered.bed"
+
 ## MUT_FILE:
 #  Mutation locations on patient genomes
 #  1. icgc_mutation_id
@@ -85,7 +87,6 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 #  3. region_end_pos1000
 #  4. transcription_factor
 
-MUT_CNTR="./data/ssm.open.distalTFBS_WGS_${DHS}_${MUT_DATASET}_centered.bed"
 cut -f9-11,16,17,34 "${MUT_FILE}" | # select cols
   awk '$6=="WGS"' | # get only WGS
   cut -f1-5 | # remove sequencing_strategy col
