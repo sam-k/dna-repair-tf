@@ -1,14 +1,14 @@
 #!/bin/bash
-#SBATCH --job-name mut-prof_NC
+#SBATCH --job-name mut-prof_enh
 #SBATCH --mail-user sdk18@duke.edu
 #SBATCH --mail-type END,FAIL
 #SBATCH --time 12:00:00
-#SBATCH -c 4
-#SBATCH --output logs/mut-profile_NC.cl.out
-#SBATCH --error logs/mut-profile_NC.cl.err
+#SBATCH -c 3
+#SBATCH --output logs/mut-profile_enh.cl.out
+#SBATCH --error logs/mut-profile_enh.cl.err
 
 ## Intersects somatic mutation coords w/ TFBS coords.
-## Mutation file is filtered using Jingkang's data.
+## Mutation file is filtered using FANTOM5 enhancers data.
 #  Does not produce intermediate files.
 #  Run on full data using cluster.
 
@@ -22,7 +22,7 @@ MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 ENH_FILE="../datasets/permissive_enhancers.bed"
 TFBS_FILE="../datasets/distalTFBS-${DHS}_${TFBS_DATASET}.bed"
 
-MUT_CNTR="./data/ssm.open.JK_${DHS}_${MUT_DATASET}_centered.bed"
+MUT_CNTR="./data/ssm.open.enh_${DHS}_${MUT_DATASET}_centered.bed"
 
 ## MUT_FILE:
 #  Mutation locations on patient genomes
@@ -69,28 +69,17 @@ MUT_CNTR="./data/ssm.open.JK_${DHS}_${MUT_DATASET}_centered.bed"
 # 41. raw_data_accession
 # 42. initial_data_release_date
 
-## CDS_FILE:
-#  Coding regions on genome
-#  1. chromosome
-#  2. chromosome_start
-#  3. chromosome_end
-#  4. name
-#  5. score
-#  6. strand
-#  NC1 : coding_exons.bed
-#  NC2 : cds.regions
-
-## GEN_FILE:
-#  Lengths of each chromosome (1-26/M/X/Y) in genome
-#  1. chromosome
-#  2. length
-
 ## TFBS_FILE:
 #  Transcription factor-binding sites on genome
 #  1. chromosome
 #  2. chromosome_start
 #  3. chromosome_end
 #  4. transcription_factor
+
+ENH_PROC="./data/supplementary/permissive_enhancers_proc.bed"
+cut -f1-3 "${ENH_FILE}" |
+  tail -n +2 |
+  sort -V > "${ENH_PROC}"
 
 # Transform TFBSs into TFBS centers ±1000 bp.
 TFBS_CNTR="./data/supplementary/distalTFBS-${DHS}_${TFBS_DATASET}_center1000.bed"
@@ -109,7 +98,7 @@ cut -f9-11,16-17 "${MUT_FILE}" | # select cols
   sed -e $'s/\t/>/4' | # preprocess to BED format
   sed -e 's/^/chr/' |
   uniq | # remove duplicates
-  bedtools intersect -a - -b "${ENH_FILE}" -wa -sorted | # intersect with enhancer regions
+  bedtools intersect -a - -b "${ENH_PROC}" -wa -sorted | # intersect with enhancer regions
   bedtools intersect -a - -b "${TFBS_CNTR}" -wa -wb -sorted | # intersect with TFBS ±1000bp regions
   cut -f1-2,4,6,8 |
   awk '{dist=$2-$4-1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |

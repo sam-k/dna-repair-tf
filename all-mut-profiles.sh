@@ -2,7 +2,7 @@
 
 ### Calls mut-profile_TYPE.cl.sh on all datasets, as specified.
 
-FILENAME="./mut-profile_jingkang.cl.sh"
+FILENAME="./mut-profile_enhancers.cl.sh"
 DHS="DHS"
 
 ## FILENAME:
@@ -26,6 +26,6 @@ declare -a tfbs=(
   "skcm"  "crc"   "skcm"  "skcm"
 )
 
-for ((i=0;i<4;++i)); do
+for ((i=0; i<${#mut[@]}; i++)); do
     sbatch "${FILENAME}" "${mut[i]}" "${tfbs[i]}" "${DHS}"
 done

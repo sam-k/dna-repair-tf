@@ -9,32 +9,41 @@
 
 ### Run snippets for testing purposes
 
-# MUT_DATASET=SKCM-US
-# TFBS_DATASET=skcm
+# module load bedtools2
 
-# MUT_FILE="./temp_data/sample.ssm.open.${MUT_DATASET}.tsv"
-# MUT_FILE_PREFIX="./temp_data/sample.ssm.open.${MUT_DATASET}"
-# MUT_PREP="${MUT_FILE_PREFIX}_prepped.bed"
-# MUT_INTR="${MUT_FILE_PREFIX}_intersect.bed"
-# MUT_CNTR="${MUT_FILE_PREFIX}_centered.bed"
+# MUT_DATASET=BLCA
+# TFBS_DATASET=blca
 
-# TFBS_FILE="../datasets/proximalTFBS-DHS_${TFBS_DATASET}.bed"
-# TFBS_CNTR="./data/sample.proximalTFBS-DHS_${TFBS_DATASET}_center1000.bed"
+# MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
+# TSS_FILE="../datasets/refseq_TSS_hg19_170929.bed"
+# TFBS_FILE="../datasets/distalTFBS-${DHS}_${TFBS_DATASET}.bed"
 
-# cut -f9-11,16,17,34 $MUT_FILE | # select cols
-#   awk '$6=="WGS"' | # get only WGS
-#   cut -f1-5 | # remove sequencing_strategy col
+# TSS_PROC="./tss-processed.bed"
+# MUT_INTR="./${MUT_DATASET}_intr_tss.bed"
+
+# ## TSS_FILE:
+# #  Transcription start sites on genome
+# #  1. chromosome
+# #  2. chromosome_start
+# #  3. chromosome_end
+# #  4. name
+# #  5. score
+# #  6. strand
+
+# cut -f1-3 "${TSS_FILE}" |
+#   sort -V |
+#   uniq > "${TSS_PROC}"
+
+# cut -f9-11,16-17 "${MUT_FILE}" | # select cols
 #   sort -V | # sort
 #   sed -e $'s/\t/>/4' | # preprocess to BED format
 #   sed -e 's/^/chr/' |
-#   uniq > $MUT_PREP # remove duplicates
+#   uniq | # remove duplicates
+#   bedtools closest -a - -b "${TSS_PROC}" -D ref |
+#   sort -V > "${MUT_INTR}"
 
-module load bedtools2
-
-CDS_FILE="../datasets/coding_exons.bed"
-GEN_FILE="../datasets/human.hg38.genome"
-NONCODING="./data/supplementary/coding_exons_complement.bed"
-
-grep -P '^chr(\d+|[MXY])\t' "${CDS_FILE}" |
-  sort -V |
-  bedtools complement -i - -g "${GEN_FILE}" > "${NONCODING}"
+ENH_FILE="../datasets/permissive_enhancers.bed"
+ENH_PROC="./test_permissive_enhancers_proc.bed"
+cut -f1-3 "${ENH_FILE}" |
+  tail -n +2 |
+  sort -V > "${ENH_PROC}"
