@@ -40,6 +40,7 @@ case "${WHICH_DATA}" in
       "blca"  "crc"   "hnsc"  "luad_lusc" "crc"
     )
     ;;
+  # Anything else
   *)
     echo "Invalid argument"
     exit 1
