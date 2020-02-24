@@ -2,7 +2,7 @@
 
 ### Calls mut-profile_TYPE.cl.sh on all datasets, as specified.
 
-FILENAME="./mut-profile_enhancers.cl.sh"
+FILENAME="./mut-profile_tss.cl.sh"
 DHS="DHS"
 
 ## FILENAME:

@@ -21,7 +21,7 @@ DHS="$3"
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 CDS_FILE="../datasets/cds.regions"
 GEN_FILE="../datasets/human.hg38.genome"
-TFBS_FILE="../datasets/distalTFBS-${DHS}_${TFBS_DATASET}.bed"
+TFBS_FILE="../datasets/proximalTFBS-${DHS}_${TFBS_DATASET}.bed"
 
 MUT_CNTR="./data/ssm.open.NC2_${DHS}_${MUT_DATASET}_centered.bed"
 

@@ -19,10 +19,10 @@ TFBS_DATASET="$2"
 DHS="$3"
 
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
-TSS_FILE="refseq_TSS_hg19_170929.bed"
-TFBS_FILE="../datasets/distalTFBS-${DHS}_${TFBS_DATASET}.bed"
+TSS_FILE="../datasets/refseq_TSS_hg19_170929.bed"
+TFBS_FILE="../datasets/proximalTFBS-${DHS}_${TFBS_DATASET}.bed"
 
-MUT_CNTR="./data/ssm.open.enh_${DHS}_${MUT_DATASET}_centered.bed"
+MUT_CNTR="./data/ssm.open.tss_${DHS}_${MUT_DATASET}_centered.bed"
 
 ## MUT_FILE:
 #  Mutation locations on patient genomes
@@ -97,12 +97,24 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 #  3. region_end_pos1000
 #  4. transcription_factor
 
+# Transform TSSs into upstream regions -2000 bp.
+TSS_UPSTR="./data/supplementary/refseq_TSS_upstream2000.bed"
+cut -f1-2 "${TSS_FILE}" | # select cols
+ sort -V | # sort
+ awk '{print $1"\t"($2-2000)"\t"$2}' > "${TSS_UPSTR}"
+
+## TSS_UPSTR:
+#  Assumed promoter regions: 2000 bp upstream of each TSS
+#  1. chromosome
+#  2. chromosome_start
+#  3. chromosome_end
+
 cut -f9-11,16-17 "${MUT_FILE}" | # select cols
   sort -V | # sort
   sed -e $'s/\t/>/4' | # preprocess to BED format
   sed -e 's/^/chr/' |
   uniq | # remove duplicates
-  bedtools intersect -a - -b "${ENH_PROC}" -wa -sorted | # intersect with enhancer regions
+  bedtools intersect -a - -b "${TSS_UPSTR}" -wa -sorted | # intersect with assumed promoter regions (TSS -2000bp)
   bedtools intersect -a - -b "${TFBS_CNTR}" -wa -wb -sorted | # intersect with TFBS ±1000bp regions
   cut -f1-2,4,6,8 |
   awk '{dist=$2-$4-1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |

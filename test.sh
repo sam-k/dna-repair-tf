@@ -42,8 +42,15 @@
 #   bedtools closest -a - -b "${TSS_PROC}" -D ref |
 #   sort -V > "${MUT_INTR}"
 
-ENH_FILE="../datasets/permissive_enhancers.bed"
-ENH_PROC="./test_permissive_enhancers_proc.bed"
-cut -f1-3 "${ENH_FILE}" |
-  tail -n +2 |
-  sort -V > "${ENH_PROC}"
+# ENH_FILE="../datasets/permissive_enhancers.bed"
+# ENH_PROC="./test_permissive_enhancers_proc.bed"
+# cut -f1-3 "${ENH_FILE}" |
+#   tail -n +2 |
+#   sort -V > "${ENH_PROC}"
+
+TSS_FILE="../datasets/refseq_TSS_hg19_170929.bed"
+# Transform TSSs into upstream regions -1000 bp.
+TSS_UPSTR="./data/supplementary/refseq_TSS_upstream2000.bed"
+cut -f1-2 "${TSS_FILE}" | # select cols
+ sort -V | # sort
+ awk '{print $1"\t"($2-2000)"\t"$2}' > "${TSS_UPSTR}"

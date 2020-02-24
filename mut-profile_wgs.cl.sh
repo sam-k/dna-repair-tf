@@ -19,7 +19,7 @@ TFBS_DATASET="$2"
 DHS="$3"
 
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
-TFBS_FILE="../datasets/distalTFBS-${DHS}_${TFBS_DATASET}.bed"
+TFBS_FILE="../datasets/proximalTFBS-${DHS}_${TFBS_DATASET}.bed"
 
 MUT_CNTR="./data/ssm.open.WGS_${DHS}_${MUT_DATASET}_centered.bed"
 
