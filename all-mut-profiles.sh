@@ -4,7 +4,7 @@
 
 TYPE="tss"
 DHS="DHS"
-WHICH_DATA="small"
+WHICH_DATA="all"
 
 FILENAME="./mut-profile_${TYPE}.cl.sh"
 
