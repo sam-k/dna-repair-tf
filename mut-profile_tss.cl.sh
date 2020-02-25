@@ -16,15 +16,25 @@ module load bedtools2
 
 MUT_DATASET="$1"
 TFBS_DATASET="$2"
-DHS="$3"
+TFBS_DHS="$3"
+TFBS_TYPE="$4"
+
 UPSTREAM="2000"
 DOWNSTREAM="2000"
 
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 TSS_FILE="../datasets/refseq_TSS_hg19_170929.bed"
-TFBS_FILE="../datasets/proximalTFBS-${DHS}_${TFBS_DATASET}.bed"
+TFBS_FILE="../datasets/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}.bed"
 
-MUT_CNTR="./data/ssm.open.tss_${DHS}_${MUT_DATASET}_centered.bed"
+case "${TFBS_TYPE}" in
+  distal )
+    temp="distalTFBS_"
+    ;;
+  * )
+    temp=""
+    ;;
+esac
+MUT_CNTR="./data/ssm.open.${temp}tss_${TFBS_DHS}_${MUT_DATASET}_centered.bed"
 
 ## MUT_FILE:
 #  Mutation locations on patient genomes

@@ -2,9 +2,10 @@
 
 ### Calls mut-profile_TYPE.cl.sh on all datasets, as specified.
 
-TYPE="tss"
-DHS="DHS"
-WHICH_DATA="all"
+TYPE="enhancers"
+TFBS_DHS="DHS"
+TFBS_TYPE="distal"
+WHICH_DATA="skcm"
 
 FILENAME="./mut-profile_${TYPE}.cl.sh"
 
@@ -40,6 +41,15 @@ case "${WHICH_DATA}" in
       "blca"  "crc"   "hnsc"  "luad_lusc" "crc"
     )
     ;;
+  # Only skin cancers
+  skcm )
+    declare -a mut=(
+      "MELA"  "SKCA"  "SKCM"
+    )
+    declare -a tfbs=(
+      "skcm"  "skcm"  "skcm"
+    )
+    ;;
   # Anything else
   *)
     echo "Invalid argument"
@@ -49,5 +59,5 @@ esac
 
 # Queue scripts on cluster
 for ((i=0; i<${#mut[@]}; i++)); do
-    sbatch "${FILENAME}" "${mut[i]}" "${tfbs[i]}" "${DHS}"
+    sbatch "${FILENAME}" "${mut[i]}" "${tfbs[i]}" "${TFBS_DHS}" "${TFBS_TYPE}"
 done
