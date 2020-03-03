@@ -48,9 +48,12 @@
 #   tail -n +2 |
 #   sort -V > "${ENH_PROC}"
 
-TSS_FILE="../datasets/refseq_TSS_hg19_170929.bed"
-# Transform TSSs into upstream regions -1000 bp.
-TSS_UPSTR="./data/supplementary/refseq_TSS_upstream2000.bed"
-cut -f1-2 "${TSS_FILE}" | # select cols
- sort -V | # sort
- awk '{print $1"\t"($2-2000)"\t"$2}' > "${TSS_UPSTR}"
+# TSS_FILE="../datasets/refseq_TSS_hg19_170929.bed"
+# # Transform TSSs into upstream regions -1000 bp.
+# TSS_UPSTR="./data/supplementary/refseq_TSS_upstream2000.bed"
+# cut -f1-2 "${TSS_FILE}" | # select cols
+#  sort -V | # sort
+#  awk '{print $1"\t"($2-2000)"\t"$2}' > "${TSS_UPSTR}"
+
+module load bedtools2
+module load invalid-module
