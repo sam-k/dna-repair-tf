@@ -3,23 +3,29 @@ from matplotlib import pyplot as plt
 from matplotlib import gridspec as gs
 
 
+### Set global variables ###
+
+
 WORKSPACE = "/data/gordanlab/samkim/dna-repair-tf"
 FILTER_BY = "WGS"
 TFBS_DHS = True
 TFBS_TYPE = "proximal"
 WHICH_DATA = "skcm"
 
+NAME = "{}{}{}".format(
+    ("" if TFBS_TYPE == "proximal" else TFBS_TYPE + "TFBS_"),
+    (FILTER_BY + "_" if FILTER_BY else ""),
+    ("DHS" if TFBS_DHS else "noDHS"),
+)
+
+
+### Get mutation counts per position, and per position per TF ###
+
 
 def get_dists(mut_dataset_name, filter_by="", tfbs_dhs=True, tfbs_type="proximal"):
     mut_list = []
     with open(
-        "{}/data/ssm.open.{}{}{}_{}_centered.bed".format(
-            WORKSPACE,
-            ("" if tfbs_type == "proximal" else tfbs_type + "TFBS_"),
-            (filter_by + "_" if filter_by else ""),
-            ("DHS" if tfbs_dhs else "noDHS"),
-            mut_dataset_name,
-        )
+        "{}/data/ssm.open.{}_{}_centered.bed".format(WORKSPACE, NAME, mut_dataset_name)
     ) as f:
         for line in f:
             _, dist, _, mut, tf = line.strip().split()
@@ -38,6 +44,9 @@ def get_dists(mut_dataset_name, filter_by="", tfbs_dhs=True, tfbs_type="proximal
     return counts, counts_by_tf
 
 
+### Create mutation profile plots ###
+
+
 def plot_dists(
     counts,
     counts_by_tf,
@@ -47,7 +56,7 @@ def plot_dists(
     h2=0.6,
     w2=0.5,
 ):
-    plt.figure(figsize=figsize)
+    fig = plt.figure(figsize=figsize)
     plt.subplots_adjust(hspace=h1)
     outer = gs.GridSpec(2, 1, height_ratios=[2, 5])
     gs1 = gs.GridSpecFromSubplotSpec(1, 6, subplot_spec=outer[0])
@@ -94,6 +103,16 @@ def plot_dists(
             break
 
     plt.show()
+    fig.savefig(
+        "{}/figures/{}_{}_mut-profile.png".format(WORKSPACE, NAME, mut_dataset_name),
+        dpi="figure",
+        transparent=True,
+        bbox_inches="tight",
+        pad_inches=0,
+    )
+
+
+### Wrapper function for making plots ###
 
 
 def make_plots(all_counts, all_counts_by_tf, all_names, name):
@@ -104,6 +123,9 @@ def make_plots(all_counts, all_counts_by_tf, all_names, name):
             print("There are no more datasets.")
             return
     plot_dists(all_counts[name], all_counts_by_tf[name], name)
+
+
+### Actually run the datasets ###
 
 
 if WHICH_DATA == "small":
