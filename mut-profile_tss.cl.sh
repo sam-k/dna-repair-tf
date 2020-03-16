@@ -20,7 +20,7 @@ TFBS_DHS="$3"
 TFBS_TYPE="$4"
 
 UPSTREAM="2000"
-DOWNSTREAM="2000"
+DOWNSTREAM="1000"
 
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 TSS_FILE="../datasets/refseq_TSS_hg19_170929.bed"
