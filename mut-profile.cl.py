@@ -1,15 +1,14 @@
-import collections
+import sys, collections
 from matplotlib import pyplot as plt
 from matplotlib import gridspec as gs
-import sys
 
 
 ### Set global variables ###
 
 
 WORKSPACE = "/data/gordanlab/samkim/dna-repair-tf"
-FILTER_BY = "WGS"
-TFBS_DHS = True
+FILTER_BY = sys.argv[1]
+TFBS_DHS = sys.argv[2]
 TFBS_TYPE = "proximal"
 WHICH_DATA = "skcm"
 
@@ -19,6 +18,7 @@ NAME = "{}{}{}".format(
     ("DHS" if TFBS_DHS else "noDHS"),
 )
 
+DATA_NAME = {"enhancers": "enh", "wgs": "WGS"}
 
 ### Get mutation counts per position, and per position per TF ###
 

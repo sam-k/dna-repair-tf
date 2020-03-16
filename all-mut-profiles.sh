@@ -1,11 +1,13 @@
 #!/bin/bash
 
+module load python
+
 ### Calls mut-profile_TYPE.cl.sh on all datasets, as specified.
 
-TYPE="enhancers"
-TFBS_DHS="DHS"
-TFBS_TYPE="distal"
-WHICH_DATA="skcm"
+TYPE="enhancers" # run type
+TFBS_DHS="DHS" # DHS, noDHS
+TFBS_TYPE="distal" # proximal, distal
+WHICH_DATA="skcm" # data group name (see below)
 
 FILENAME="./mut-profile_${TYPE}.cl.sh"
 
@@ -61,3 +63,6 @@ esac
 for ((i=0; i<${#mut[@]}; i++)); do
     sbatch "${FILENAME}" "${mut[i]}" "${tfbs[i]}" "${TFBS_DHS}" "${TFBS_TYPE}"
 done
+
+# Generate figures
+python "./mut-profile.cl.py" "${TYPE}" "${TFBS_DHS}" "${TFBS_TYPE}" "${WHICH_DATA}"

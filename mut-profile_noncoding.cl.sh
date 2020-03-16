@@ -18,10 +18,11 @@ MUT_DATASET="$1"
 TFBS_DATASET="$2"
 TFBS_DHS="$3"
 TFBS_TYPE="$4"
+CDS_FILE_ID="$5"
 
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
-CDS_FILE="../datasets/coding_exons.bed" # NC1
-# CDS_FILE="../datasets/cds.regions" # NC2
+CDS_FILE_1="../datasets/coding_exons.bed" # NC1
+CDS_FILE_2="../datasets/cds.regions" # NC2
 GEN_FILE="../datasets/human.hg38.genome"
 TFBS_FILE="../datasets/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}.bed"
 
@@ -33,6 +34,9 @@ case "${TFBS_TYPE}" in
     temp=""
     ;;
 esac
+case "${CDS_FILE_ID}" in
+  1 )
+  CDS_FILE=
 MUT_CNTR="./data/ssm.open.${temp}NC1_${TFBS_DHS}_${MUT_DATASET}_centered.bed"
 
 ## MUT_FILE:
