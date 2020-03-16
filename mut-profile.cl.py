@@ -133,7 +133,7 @@ if WHICH_DATA == "small":
     # for testing purposes
     all_names = ["BLCA", "COAD", "HNSC", "LUAD", "READ"]
 elif WHICH_DATA == "skcm":
-    # for distalTFBS-DHS_skcm.bed
+    # use with distalTFBS-DHS_skcm.bed
     all_names = ["MELA", "SKCA", "SKCM"]
 else:
     # everything
