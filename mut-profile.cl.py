@@ -1,6 +1,7 @@
 import collections
 from matplotlib import pyplot as plt
 from matplotlib import gridspec as gs
+import sys
 
 
 ### Set global variables ###
@@ -129,10 +130,13 @@ def make_plots(all_counts, all_counts_by_tf, all_names, name):
 
 
 if WHICH_DATA == "small":
+    # for testing purposes
     all_names = ["BLCA", "COAD", "HNSC", "LUAD", "READ"]
 elif WHICH_DATA == "skcm":
+    # for distalTFBS-DHS_skcm.bed
     all_names = ["MELA", "SKCA", "SKCM"]
 else:
+    # everything
     all_names = [
         "BLCA",
         "BRCA",
