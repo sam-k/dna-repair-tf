@@ -20,7 +20,8 @@ TFBS_DHS="$3"
 TFBS_TYPE="$4"
 
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
-CDS_FILE="../datasets/cds.regions"
+CDS_FILE="../datasets/coding_exons.bed" # NC1
+# CDS_FILE="../datasets/cds.regions" # NC2
 GEN_FILE="../datasets/human.hg38.genome"
 TFBS_FILE="../datasets/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}.bed"
 
@@ -32,7 +33,7 @@ case "${TFBS_TYPE}" in
     temp=""
     ;;
 esac
-MUT_CNTR="./data/ssm.open.${temp}NC2_${TFBS_DHS}_${MUT_DATASET}_centered.bed"
+MUT_CNTR="./data/ssm.open.${temp}NC1_${TFBS_DHS}_${MUT_DATASET}_centered.bed"
 
 ## MUT_FILE:
 #  Mutation locations on patient genomes
