@@ -11,7 +11,7 @@ Somatic mutation data is from [ICGC DCC Data Release 28](https://dcc.icgc.org/re
 
 I used the following cancer type datasets:
 
-| Cancer Type | Project |
+| Cancer Type | Projects |
 |-|-|
 | BLCA | BLCA-CN (bladder cancer – CN)<br>BLCA-US (bladder urothelial cancer – TCGA, US) |
 | BRCA | BRCA-EU (breast ER+ and HER2- cancer – EU/UK)<br>BRCA-FR (breast cancer – FR)<br>BRCA-KR (breast cancer – very young women – KR)<br>BRCA-UK (breast triple negative/lobular cancer – UK)<br>BRCA-US (breast cancer – TCGA, US) |
