@@ -3,19 +3,24 @@
 ### Calls mut-profile_TYPE.cl.sh on all datasets, as specified.
 
 module load python
+module load Anaconda
 
-RUN_TYPE="enhancers"  # run type
+RUN_TYPE="wgs"  # run type
 TFBS_DHS="DHS"  # DHS, noDHS
-TFBS_TYPE="distal"  # proximal, distal
-WHICH_DATA="skcm"  # data group name
-CDS_FILE_ID="1"  # coding regions file ID
+TFBS_TYPE="proximal"  # proximal, distal
+WHICH_DATA="small"  # data group name
+CDS_FILE_ID=""  # coding regions file ID
 PACKAGE="bedtools"  # package to use
 
 FILENAME="./mut-profile_${RUN_TYPE}.cl.sh"
 
+# Debug flags: 0 for true, 1 for false
+GENERATE_PROFILES=1
+GENERATE_FIGURES=0
+
 ## RUN_TYPE:
 #  Bash script filename to be called.
-#  (none)
+#  none
 #  enhancers
 #  noncoding
 #  tss
@@ -129,16 +134,18 @@ if [[ $invalid_arg_flag -eq 0 ]]; then
   exit 1
 fi
 
-for ((i=0; i<${#mut[@]}; i++)); do
-    sbatch "${FILENAME}" "${mut[i]}" "${tfbs[i]}" "${TFBS_DHS}" "${TFBS_TYPE}" "${CDS_FILE_ID} ${PACKAGE}"
-done
+if [[ $GENERATE_PROFILES -eq 0 ]]; then
+  for ((i=0; i<${#mut[@]}; i++)); do
+      sbatch "${FILENAME}" "${mut[i]}" "${tfbs[i]}" "${TFBS_DHS}" "${TFBS_TYPE}" "${CDS_FILE_ID} ${PACKAGE}"
+  done
+fi
 
 
 ## Generate figures.
 
 # Build common prefix for figure files
 declare -A run_codes=(
-  [""]=""
+  ["none"]=""
   ["enhancers"]="enh"
   ["noncoding"]="NC"
   ["tss"]="TSS"
@@ -152,10 +159,13 @@ run_name="${run_name}${run_codes[${RUN_TYPE}]}"
 if [[ "${RUN_TYPE}" == "noncoding" ]]; then
   run_name="${run_name}${CDS_FILE_ID}"
 fi
-if [[ "${RUN_TYPE}" ]]; then
+if [[ "run_codes[${RUN_TYPE}]" ]]; then
   run_name="${run_name}_"
 fi
 run_name="${run_name}${TFBS_DHS}"
+echo $run_name
 
-# Call python script
-python "./mut-profile.cl.py" "${run_name}" "${WHICH_DATA}"
+# Queue python script
+if [[ $GENERATE_FIGURES -eq 0 ]]; then
+  python "./mut-profile.cl.py" "${run_name}" "${WHICH_DATA}"
+fi
