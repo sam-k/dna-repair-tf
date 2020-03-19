@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 ### Creates intermediate files for debugging.
 ### Run locally on small sample of data.
@@ -77,13 +77,13 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 
 MUT_FILE_PREFIX="./data/ssm.open.${MUT_DATASET}"
 MUT_PREP="${MUT_FILE_PREFIX}_prepped.bed"
-cut -f9-11,16,17,34 $MUT_FILE | # select cols
-  awk '$6=="WGS"' | # get only WGS
-  cut -f1-5 | # remove sequencing_strategy col
-  sort -V | # sort
-  sed -e $'s/\t/>/4' | # preprocess to BED format
+cut -f9-11,16,17,34 $MUT_FILE |  # select cols
+  awk '$6=="WGS"' |  # get only WGS
+  cut -f1-5 |  # remove sequencing_strategy col
+  sort -V |  # sort
+  sed -e $'s/\t/>/4' |  # preprocess to BED format
   sed -e 's/^/chr/' |
-  uniq > $MUT_PREP # remove duplicates
+  uniq > $MUT_PREP  # remove duplicates
 
 ## MUT_PREP:
 #  Mut locations preprocessed to fit BED format
@@ -93,7 +93,7 @@ cut -f9-11,16,17,34 $MUT_FILE | # select cols
 #  4. mutation_allele
 
 MUT_INTR="${MUT_FILE_PREFIX}_intersect.bed"
-bedtools intersect -a $MUT_PREP -b $TFBS_CNTR -wa -wb | # intersect with TFBS ±1000bp regions
+bedtools intersect -a $MUT_PREP -b $TFBS_CNTR -wa -wb |  # intersect with TFBS ±1000bp regions
   cut -f1-2,4,6,8 |
   awk '{center=$4+1000; print $1"\t"$2"\t"$2"\t"$3"\t"center"\t"($2-center)"\t"$5}' |
   sort -V > $MUT_INTR

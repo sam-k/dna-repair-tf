@@ -1,26 +1,97 @@
-#!/bin/bash
-
-module load python
+#!/usr/bin/env bash
 
 ### Calls mut-profile_TYPE.cl.sh on all datasets, as specified.
 
-TYPE="enhancers" # run type
-TFBS_DHS="DHS" # DHS, noDHS
-TFBS_TYPE="distal" # proximal, distal
-WHICH_DATA="skcm" # data group name (see below)
+module load python
 
-FILENAME="./mut-profile_${TYPE}.cl.sh"
+RUN_TYPE="enhancers"  # run type
+TFBS_DHS="DHS"  # DHS, noDHS
+TFBS_TYPE="distal"  # proximal, distal
+WHICH_DATA="skcm"  # data group name
+CDS_FILE_ID="1"  # coding regions file ID
+PACKAGE="bedtools"  # package to use
 
-## FILENAME:
+FILENAME="./mut-profile_${RUN_TYPE}.cl.sh"
+
+## RUN_TYPE:
 #  Bash script filename to be called.
-#  ./mut-profile.cl.sh
-#  ./mut-profile_wgs.cl.sh
-#  ./mut-profile_noncoding.cl.sh
+#  (none)
+#  enhancers
+#  noncoding
+#  tss
+#  wgs
 
-## DHS:
-#  Whether to use DHS or noDHS TFBS file.
+## TFBS_DHS:
+#  Whether to use active (DHS) or inactive (noDHS) TFBSs.
 #  DHS
 #  noDHS
+
+## TFBS_TYPE:
+#  Whether to use proximal or distal (melanoma only) TFBSs.
+#  proximal
+#  distal
+
+## WHICH_DATA:
+#  Which group of somatic mutation data to use.
+#  all
+#  small
+#  skcm
+
+## CDS_FILE_ID:
+#  Which coding regions file to use.
+#  1: coding_exons.bed
+#  2: cds.regions
+
+## PACKAGE:
+#  Which bioinformatics package to use.
+#  bedops
+#  bedtools
+
+
+## Check arguments before proceeding any further.
+
+# Function for checkng if element is in array
+contains () {
+  local arr="$1[@]"
+  local elem="$2"
+  local in=1
+  for x in "${!arr}"; do  # unpack
+    if [[ $x == "$elem" ]]; then
+      in=0
+      break
+    fi
+  done
+  return $in
+}
+
+check_args() {
+  local type="$1"
+  local arg="$2"
+  local -n _args="$3"  # underline is to avoid namespace errors
+
+  contains _args "${arg}"
+  if [[ $? -ne 0 ]]; then  # contains returns exit code
+    echo "Invalid ${type} argument: ${arg}"
+  fi
+}
+
+declare -a args=("" "enhancers" "noncoding" "tss" "wgs")
+check_args "RUN_TYPE" "${RUN_TYPE}" args
+
+declare -a args=("DHS" "noDHS")
+check_args "TFBS_DHS" "${TFBS_DHS}" args
+
+declare -a args=("distal" "proximal")
+check_args "TFBS_TYPE" "${TFBS_TYPE}" args
+
+declare -a args=("" "1" "2")
+check_args "CDS_FILE_ID" "${CDS_FILE_ID}" args
+
+declare -a args=("bedops" "bedtools")
+check_args "PACKAGE" "${PACKAGE}" args
+
+
+## Select datasets to use.
 
 case "${WHICH_DATA}" in
   # All mutation/TFBS datasets
@@ -54,15 +125,41 @@ case "${WHICH_DATA}" in
     ;;
   # Anything else
   *)
-    echo "Invalid argument"
+    echo "Invalid WHICH_DATA argument: ${WHICH_DATA}"
     exit 1
     ;;
 esac
 
-# Queue scripts on cluster
+
+## Queue scripts on cluster.
+
 for ((i=0; i<${#mut[@]}; i++)); do
-    sbatch "${FILENAME}" "${mut[i]}" "${tfbs[i]}" "${TFBS_DHS}" "${TFBS_TYPE}"
+    sbatch "${FILENAME}" "${mut[i]}" "${tfbs[i]}" "${TFBS_DHS}" "${TFBS_TYPE}" "${CDS_FILE_ID} ${PACKAGE}"
 done
 
-# Generate figures
-python "./mut-profile.cl.py" "${TYPE}" "${TFBS_DHS}" "${TFBS_TYPE}" "${WHICH_DATA}"
+
+## Generate figures.
+
+# Build common prefix for figure files
+declare -A run_codes=(
+  [""]=""
+  ["enhancers"]="enh"
+  ["noncoding"]="NC"
+  ["tss"]="TSS"
+  ["wgs"]="WGS"
+)
+run_name=""
+if [[ "${TFBS_TYPE}" != "proximal" ]]; then
+  run_name="${TFBS_TYPE}TFBS_${run_name}"
+fi
+run_name="${run_name}${run_codes[${RUN_TYPE}]}"
+if [[ "${RUN_TYPE}" == "noncoding" ]]; then
+  run_name="${run_name}${CDS_FILE_ID}"
+fi
+if [[ "${RUN_TYPE}" ]]; then
+  run_name="${run_name}_"
+fi
+run_name="${run_name}${TFBS_DHS}"
+
+# Call python script
+python "./mut-profile.cl.py" "${run_name}" "${WHICH_DATA}"

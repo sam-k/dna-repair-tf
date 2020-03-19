@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #SBATCH --job-name mut-prof_WGS
 #SBATCH --mail-user sdk18@duke.edu
 #SBATCH --mail-type END,FAIL
@@ -18,16 +18,18 @@ MUT_DATASET="$1"
 TFBS_DATASET="$2"
 TFBS_DHS="$3"
 TFBS_TYPE="$4"
+CDS_FILE_ID="5"
+PACKAGE="$6"
 
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 TFBS_FILE="../datasets/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}.bed"
 
 case "${TFBS_TYPE}" in
-  distal )
-    temp="distalTFBS_"
+  proximal )
+    temp=""
     ;;
   * )
-    temp=""
+    temp="${TFBS_TYPE}TFBS_"
     ;;
 esac
 MUT_CNTR="./data/ssm.open.${temp}WGS_${TFBS_DHS}_${MUT_DATASET}_centered.bed"
@@ -96,14 +98,14 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 #  3. region_end_pos1000
 #  4. transcription_factor
 
-cut -f9-11,16,17,34 "${MUT_FILE}" | # select cols
-  awk '$6=="WGS"' | # get only WGS
-  cut -f1-5 | # remove sequencing_strategy col
-  sort -V | # sort
-  sed -e $'s/\t/>/4' | # preprocess to BED format
+cut -f9-11,16,17,34 "${MUT_FILE}" |  # select cols
+  awk '$6=="WGS"' |  # get only WGS
+  cut -f1-5 |  # remove sequencing_strategy col
+  sort -V |  # sort
+  sed -e $'s/\t/>/4' |  # preprocess to BED format
   sed -e 's/^/chr/' |
-  uniq | # remove duplicates
-  bedtools intersect -a - -b "${TFBS_CNTR}" -wa -wb -sorted | # intersect with TFBS ±1000bp regions
+  uniq |  # remove duplicates
+  bedtools intersect -a - -b "${TFBS_CNTR}" -wa -wb -sorted |  # intersect with TFBS ±1000bp regions
   cut -f1-2,4,6,8 |
   awk '{dist=$2-$4-1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |
   sort -V > "${MUT_CNTR}"
