@@ -167,5 +167,5 @@ echo $run_name
 
 # Queue python script
 if [[ $GENERATE_FIGURES -eq 0 ]]; then
-  python "./mut-profile.cl.py" "${run_name}" "${WHICH_DATA}"
+  python "./mut-profile.py" "${run_name}" "${WHICH_DATA}"
 fi
