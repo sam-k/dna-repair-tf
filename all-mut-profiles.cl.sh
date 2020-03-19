@@ -1,14 +1,21 @@
 #!/usr/bin/env bash
+#SBATCH --job-name all-mut-profs
+#SBATCH --mail-user sdk18@duke.edu
+#SBATCH --mail-type END,FAIL
+#SBATCH --time 12:00:00
+#SBATCH -c 3
+#SBATCH --output logs/all-mut-profiles.cl.out
+#SBATCH --error logs/all-mut-profiles.cl.err
 
 ### Calls mut-profile_TYPE.cl.sh on all datasets, as specified.
 
 module load python
 module load Anaconda
 
-RUN_TYPE="wgs"  # run type
+RUN_TYPE="enhancers"  # run type
 TFBS_DHS="DHS"  # DHS, noDHS
 TFBS_TYPE="proximal"  # proximal, distal
-WHICH_DATA="small"  # data group name
+WHICH_DATA="all"  # data group name
 CDS_FILE_ID=""  # coding regions file ID
 PACKAGE="bedtools"  # package to use
 
