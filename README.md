@@ -11,17 +11,17 @@ Somatic mutation data is from [ICGC DCC Data Release 28](https://dcc.icgc.org/re
 
 I used the following cancer type datasets:
 
-* BLCA: BLCA-CN (Bladder Cancer - CN), BLCA-US (Bladder Urothelial Cancer - TCGA, US)
-* BRCA: BRCA-EU (Breast ER+ and HER2- Cancer - EU/UK), BRCA-FR (Breast Cancer - FR), BRCA-KR (Breast Cancer - Very young women - KR), BRCA-UK (Breast Triple Negative/Lobular Cancer - UK), BRCA-US (Breast Cancer - TCGA, US)
-* COAD: COAD-US (Colon Adenocarcinoma - TCGA, US)
-* COCA: COCA-CN (Colorectal Cancer - CN)
-* HNSC: HNSC-US (Head and Neck Squamous Cell Carcinoma - TCGA, US)
-* LUAD: LUAD-US (Lung Adenocarcinoma - TCGA, US)
-* LUSC: LUSC-CN (Lung Cancer - CN), LUSC-KR (Lung Cancer - KR), LUSC-US (Lung Squamous Cell Carcinoma - TCGA, US)
-* MELA: MELA-AU (Skin Cancer - AU)
-* READ: READ-US (Rectum Adenocarcinoma - TCGA, US)
-* SKCA: SKCA-BR (Skin Adenocarcinoma - BR)
-* SKCM: SKCM-US (Skin Cutaneous melanoma - TCGA, US)
+* BLCA: BLCA-CN (bladder cancer–CN), BLCA-US (bladder urothelial cancer–TCGA, US)
+* BRCA: BRCA-EU (breast ER+ and HER2- cancer–EU/UK), BRCA-FR (breast cancer–FR), BRCA-KR (breast cancer–very young women–KR), BRCA-UK (breast triple negative/lobular cancer–UK), BRCA-US (breast cancer–TCGA, US)
+* COAD: COAD-US (colon adenocarcinoma–TCGA, US)
+* COCA: COCA-CN (colorectal cancer–CN)
+* HNSC: HNSC-US (head and neck squamous cell carcinoma–TCGA, US)
+* LUAD: LUAD-US (lung adenocarcinoma–TCGA, US)
+* LUSC: LUSC-CN (lung cancer–CN), LUSC-KR (lung cancer–KR), LUSC-US (lung squamous cell carcinoma–TCGA, US)
+* MELA: MELA-AU (skin cancer–AU)
+* READ: READ-US (rectum adenocarcinoma–TCGA, US)
+* SKCA: SKCA-BR (skin adenocarcinoma–BR)
+* SKCM: SKCM-US (skin cutaneous melanoma–TCGA, US)
 
 ### Active TFBSs: BBGLab
 
@@ -29,10 +29,10 @@ Active transcription factor-binding site data is that used by the [Barcelona Bio
 
 I paired the following active TFBS (DHS) datasets with the following somatic mutation datasets:
 
-* Proximal BRCA (Breast): BRCA
-* Proximal BLCA (Bladder): BLCA
-* Proximal CRC (Colorectal): COAD, COCA, READ
-* Proximal HNSC (Head and neck squamous cell carcinoma): HNSC
-* Proximal LUAD/LUSC (Lung adenocarcinoma, lung squamous cell carcinoma): LUAD, LUSC
-* Proximal SKCM (Melanoma): MELA, SKCA, SKCM
-* Distal SKCM (Melanoma): MELA, SKCA, SKCM
+* Proximal BRCA (breast): BRCA
+* Proximal BLCA (bladder): BLCA
+* Proximal CRC (colorectal): COAD, COCA, READ
+* Proximal HNSC (head and neck squamous cell carcinoma): HNSC
+* Proximal LUAD/LUSC (lung adenocarcinoma, lung squamous cell carcinoma): LUAD, LUSC
+* Proximal SKCM (melanoma): MELA, SKCA, SKCM
+* Distal SKCM (melanoma): MELA, SKCA, SKCM
