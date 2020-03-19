@@ -1,4 +1,11 @@
-import sys, collections
+#!/usr/bin/env python
+
+import matplotlib, os
+
+os.environ["QT_QPA_PLATFORM"] = "offscreen"
+matplotlib.use("agg")
+
+import collections, sys
 from matplotlib import pyplot as plt
 from matplotlib import gridspec as gs
 
@@ -118,7 +125,7 @@ def plot_dists(
 def make_plots(
     all_counts, all_counts_by_tf, all_names, name, inline=True, save_fig=True
 ):
-    if isinstance(name, int) or name.isnumeric():
+    if isinstance(name, int) or name.isdigit():
         if int(name) < len(all_names):
             name = all_names[int(name)]
         else:
