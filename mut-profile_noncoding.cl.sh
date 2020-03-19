@@ -27,14 +27,9 @@ CDS_FILE_2="../datasets/cds.regions"  # NC2
 GEN_FILE="../datasets/human.hg38.genome"
 TFBS_FILE="../datasets/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}.bed"
 
-case "${TFBS_TYPE}" in
-  proximal )
-    temp=""
-    ;;
-  * )
-    temp="${TFBS_TYPE}TFBS_"
-    ;;
-esac
+if [[ "${TFBS_TYPE}" != "proximal" ]]; then
+  temp="${TFBS_TYPE}TFBS_"
+fi
 case "${CDS_FILE_ID}" in
   1 )
     CDS_FILE=CDS_FILE_1

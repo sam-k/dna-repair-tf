@@ -24,14 +24,9 @@ PACKAGE="$6"
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 TFBS_FILE="../datasets/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}.bed"
 
-case "${TFBS_TYPE}" in
-  proximal )
-    temp=""
-    ;;
-  * )
-    temp="${TFBS_TYPE}TFBS_"
-    ;;
-esac
+if [[ "${TFBS_TYPE}" != "proximal" ]]; then
+  temp="${TFBS_TYPE}TFBS_"
+fi
 MUT_CNTR="./data/ssm.open.${temp}${TFBS_DHS}_${MUT_DATASET}_centered.bed"
 
 ## MUT_FILE:
