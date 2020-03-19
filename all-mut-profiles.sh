@@ -50,29 +50,20 @@ FILENAME="./mut-profile_${RUN_TYPE}.cl.sh"
 
 ## Check arguments before proceeding any further.
 
-# Function for checkng if element is in array
-contains () {
-  local arr="$1[@]"
-  local elem="$2"
-  local in=1
-  for x in "${!arr}"; do  # unpack
-    if [[ $x == "$elem" ]]; then
-      in=0
-      break
-    fi
-  done
-  return $in
-}
-
+invalid_arg_flag=1
 check_args() {
   local type="$1"
   local arg="$2"
-  local -n _args="$3"  # underline is to avoid namespace errors
+  local arr="$3[@]"
 
-  contains _args "${arg}"
-  if [[ $? -ne 0 ]]; then  # contains returns exit code
-    echo "Invalid ${type} argument: ${arg}"
-  fi
+  for x in "${!arr}"; do
+    if [[ $x == "$arg" ]]; then
+      return
+    fi
+  done
+
+  echo "Invalid ${type} argument: ${arg}"
+  invalid_arg_flag=0
 }
 
 declare -a args=("" "enhancers" "noncoding" "tss" "wgs")
@@ -126,12 +117,17 @@ case "${WHICH_DATA}" in
   # Anything else
   *)
     echo "Invalid WHICH_DATA argument: ${WHICH_DATA}"
-    exit 1
+    invalid_arg_flag=0
     ;;
 esac
 
 
 ## Queue scripts on cluster.
+
+# If any argument was invalid, then quit
+if [[ $invalid_arg_flag -eq 0 ]]; then
+  exit 1
+fi
 
 for ((i=0; i<${#mut[@]}; i++)); do
     sbatch "${FILENAME}" "${mut[i]}" "${tfbs[i]}" "${TFBS_DHS}" "${TFBS_TYPE}" "${CDS_FILE_ID} ${PACKAGE}"
