@@ -12,7 +12,7 @@
 module load python
 module load Anaconda
 
-RUN_TYPE="enhancers"  # run type
+RUN_TYPE="wgs"  # run type
 TFBS_DHS="DHS"  # DHS, noDHS
 TFBS_TYPE="proximal"  # proximal, distal
 WHICH_DATA="all"  # data group name
@@ -22,7 +22,7 @@ PACKAGE="bedtools"  # package to use
 FILENAME="./mut-profile_${RUN_TYPE}.cl.sh"
 
 # Debug flags: 0 for true, 1 for false
-GENERATE_PROFILES=1
+GENERATE_PROFILES=0
 GENERATE_FIGURES=0
 
 ## RUN_TYPE:
@@ -63,6 +63,7 @@ GENERATE_FIGURES=0
 ## Check arguments before proceeding any further.
 
 invalid_arg_flag=1
+
 check_args() {
   local type="$1"
   local arg="$2"

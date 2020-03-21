@@ -56,8 +56,6 @@ def plot_dists(
     h1=0.2,
     h2=0.6,
     w2=0.5,
-    inline=True,
-    save_fig=True,
 ):
     fig = plt.figure(figsize=figsize)
     plt.subplots_adjust(hspace=h1)
@@ -105,33 +103,15 @@ def plot_dists(
         if row >= 5:
             break
 
-    if inline:
-        plt.show()
-    if save_fig:
-        fig.savefig(
-            "{}/figures/{}_{}_mut-profile.png".format(
-                WORKSPACE, RUN_NAME, mut_dataset_name
-            ),
-            dpi="figure",
-            transparent=True,
-            bbox_inches="tight",
-            pad_inches=0,
-        )
-
-
-### Wrapper function for making plots ###
-
-
-def make_plots(
-    all_counts, all_counts_by_tf, all_names, name, inline=True, save_fig=True
-):
-    if isinstance(name, int) or name.isdigit():
-        if int(name) < len(all_names):
-            name = all_names[int(name)]
-        else:
-            print("There are no more datasets.")
-            return
-    plot_dists(all_counts[name], all_counts_by_tf[name], name)
+    fig.savefig(
+        "{}/figures/{}_{}_mut-profile.png".format(
+            WORKSPACE, RUN_NAME, mut_dataset_name
+        ),
+        dpi="figure",
+        transparent=True,
+        bbox_inches="tight",
+        pad_inches=0,
+    )
 
 
 ### Actually run the datasets ###
@@ -163,4 +143,5 @@ all_counts = {}
 all_counts_by_tf = {}
 for name in all_names:
     all_counts[name], all_counts_by_tf[name] = get_dists(name)
-    make_plots(all_counts, all_counts_by_tf, all_names, name, inline=False)
+for name in all_names:
+    plot_dists(all_counts[name], all_counts_by_tf[name], name)
