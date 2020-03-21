@@ -104,7 +104,7 @@ def plot_dists(
             break
 
     fig.savefig(
-        "{}/figures/{}_{}_mut-profile.png".format(
+        "{}/figures/temp/{}_{}_mut-profile.png".format(
             WORKSPACE, RUN_NAME, mut_dataset_name
         ),
         dpi="figure",
