@@ -1,6 +1,7 @@
 # Project
 .idea/
 test.*
+figures/test/
 
 # Data
 data/
