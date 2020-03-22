@@ -121,7 +121,7 @@ grep -P '^chr(\d+|[MXY])\t' "$CDS_FILE" |  # remove alt chr coords
   bedtools complement -i - -g "$GEN_FILE" > "$NONCODING"
 
 # Transform TFBSs into TFBS centers ±1000 bp.
-TFBS_CNTR="./data/supplementary/distalTFBS-${DHS}_${TFBS_DATASET}_center1000.bed"
+TFBS_CNTR="./data/supplementary/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}_center1000.bed"
 awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' "$TFBS_FILE" |
   sort -V > "$TFBS_CNTR"
 

@@ -83,7 +83,7 @@ MUT_CNTR="./data/ssm.open.${TFBS_TYPE}-${TFBS_DHS}_${RUN_TYPE}_${MUT_DATASET}_ce
 #  4. transcription_factor
 
 # Transform TFBSs into TFBS centers ±1000 bp.
-TFBS_CNTR="./data/supplementary/proximalTFBS-${DHS}_${TFBS_DATASET}_center1000.bed"
+TFBS_CNTR="./data/supplementary/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}_center1000.bed"
 awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' "$TFBS_FILE" |
   sort -V > "$TFBS_CNTR"
 
