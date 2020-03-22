@@ -3,7 +3,7 @@
 #SBATCH --mail-user sdk18@duke.edu
 #SBATCH --mail-type END,FAIL
 #SBATCH --time 12:00:00
-#SBATCH -c 3
+#SBATCH -c 1
 #SBATCH --output logs/all-mut-profiles.cl.out
 #SBATCH --error logs/all-mut-profiles.cl.err
 
@@ -37,9 +37,9 @@ FILENAME="./mut-profile_${RUN_TYPE}.cl.sh"
 #  wgs
 
 ## TFBS_DHS:
-#  Whether to use active (DHS) or inactive (noDHS) TFBSs.
-#  DHS
-#  noDHS
+#  Whether to use active or inactive TFBSs.
+#  DHS (active)
+#  noDHS (inactive)
 
 ## TFBS_TYPE:
 #  Whether to use proximal or distal TFBSs.
@@ -67,8 +67,8 @@ FILENAME="./mut-profile_${RUN_TYPE}.cl.sh"
 
 ## Check arguments before proceeding any further.
 
+# Flag for whether any argument is invalid
 invalid_arg_flag=1
-
 check_args() {
   local type="$1"
   local arg="$2"
@@ -135,14 +135,14 @@ case "$WHICH_DATA" in
     ;;
 esac
 
-
-
-## Queue scripts on cluster.
-
 # If any argument was invalid, then quit
 if [[ $invalid_arg_flag -eq 0 ]]; then
   exit 1
 fi
+
+
+
+## Queue scripts on cluster.
 
 # Build identifier: e.g., proximal-DHS_WGS
 declare -A run_codes=(
@@ -157,7 +157,7 @@ run_id="${TFBS_TYPE}-${TFBS_DHS}_${run_codes[${RUN_TYPE}]}${CDS_FILE_ID}"
 # Queue bash scripts
 if [[ $_GENERATE_PROFILES -eq 0 ]]; then
   for ((i=0; i<${#mut[@]}; i++)); do
-    sbatch "$FILENAME" "${mut[i]}" "${tfbs[i]}" "$run_id" "$PACKAGE" "$_BENCHMARK"
+    sbatch "$FILENAME" "${mut[i]}" "${tfbs[i]}" "$run_id" "$PACKAGE" $_BENCHMARK
   done
 fi
 
