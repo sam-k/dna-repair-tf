@@ -23,14 +23,12 @@ _BENCHMARK="$5"
 IFS='-|_'; read -ra run_args <<< "$RUN_ID"
 TFBS_TYPE="${run_args[0]}"
 TFBS_DHS="${run_args[1]}"
+RUN_TYPE="${run_args[2]}"
 
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 TFBS_FILE="../datasets/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}.bed"
 
-if [[ "$TFBS_TYPE" != "proximal" ]]; then
-  temp="${TFBS_TYPE}TFBS_"
-fi
-MUT_CNTR="./data/ssm.open.${temp}WGS_${TFBS_DHS}_${MUT_DATASET}_centered.bed"
+MUT_CNTR="./data/ssm.open.${TFBS_TYPE}-${TFBS_DHS}_${RUN_TYPE}_${MUT_DATASET}_centered.bed"
 
 ## MUT_FILE:
 #  Mutation locations on patient genomes

@@ -12,9 +12,9 @@
 module load python
 module load Anaconda
 
-RUN_TYPE="enhancers"  # run type
+RUN_TYPE="all"  # run type
 
-TFBS_TYPE="distal"  # proximal, distal
+TFBS_TYPE="proximal"  # proximal, distal
 TFBS_DHS="DHS"  # DHS, noDHS
 CDS_FILE_ID=""  # coding regions file ID
 
@@ -42,9 +42,9 @@ FILENAME="./mut-profile_${RUN_TYPE}.cl.sh"
 #  noDHS
 
 ## TFBS_TYPE:
-#  Whether to use proximal or distal (melanoma only) TFBSs.
+#  Whether to use proximal or distal TFBSs.
 #  proximal
-#  distal
+#  distal (works with melanoma datasets only)
 
 ## WHICH_DATA:
 #  Which group of somatic mutation data to use.
@@ -54,6 +54,7 @@ FILENAME="./mut-profile_${RUN_TYPE}.cl.sh"
 
 ## CDS_FILE_ID:
 #  Which coding regions file to use.
+#  (none)
 #  1: coding_exons.bed
 #  2: cds.regions
 
@@ -143,7 +144,7 @@ if [[ $invalid_arg_flag -eq 0 ]]; then
   exit 1
 fi
 
-# Build identifier: e.g., proximal-DHS_all
+# Build identifier: e.g., proximal-DHS_WGS
 declare -A run_codes=(
   ["all"]="all"
   ["enhancers"]="enh"
