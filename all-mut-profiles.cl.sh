@@ -23,7 +23,7 @@ PACKAGE="bedtools"  # package to use
 
 # Debug flags: 0 for true, 1 for false
 _GENERATE_PROFILES=0
-_GENERATE_FIGURES=1
+_GENERATE_FIGURES=0
 _BENCHMARK=1
 
 FILENAME="./mut-profile_${RUN_TYPE}.cl.sh"
@@ -112,7 +112,7 @@ case "$WHICH_DATA" in
   # Only small (<1 GB) mutation datasets, and their TFBSs
   small )
     declare -a mut=(
-      "BLCA"  "COAD"  "HNSC"  "LUAD" "READ"
+      "BLCA"  "COAD"  "HNSC"  "LUAD"  "READ"
     )
     declare -a tfbs=(
       "blca"  "crc"   "hnsc"  "luad_lusc" "crc"
@@ -151,10 +151,7 @@ declare -A run_codes=(
   ["tss"]="TSS"
   ["wgs"]="WGS"
 )
-run_id="${TFBS_TYPE}-${TFBS_DHS}_${run_codes[${RUN_TYPE}]}"
-if [[ "$RUN_TYPE" == "noncoding" ]]; then
-  run_id="${run_id}${CDS_FILE_ID}"
-fi
+run_id="${TFBS_TYPE}-${TFBS_DHS}_${run_codes[${RUN_TYPE}]}${CDS_FILE_ID}"
 
 # Queue bash scripts
 if [[ $_GENERATE_PROFILES -eq 0 ]]; then
