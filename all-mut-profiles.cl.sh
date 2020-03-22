@@ -9,12 +9,9 @@
 
 ### Calls mut-profile_TYPE.cl.sh on all datasets, as specified.
 
-module load python
-module load Anaconda
+RUN_TYPE="enhancers"  # run type
 
-RUN_TYPE="all"  # run type
-
-TFBS_TYPE="proximal"  # proximal, distal
+TFBS_TYPE="distal"  # proximal, distal
 TFBS_DHS="DHS"  # DHS, noDHS
 CDS_FILE_ID=""  # coding regions file ID
 
@@ -24,7 +21,7 @@ PACKAGE="bedtools"  # package to use
 # Debug flags: 0 for true, 1 for false
 _GENERATE_PROFILES=0
 _GENERATE_FIGURES=0
-_BENCHMARK=1
+_BENCHMARK=0
 
 FILENAME="./mut-profile_${RUN_TYPE}.cl.sh"
 
@@ -82,7 +79,7 @@ check_args() {
   invalid_arg_flag=0
 }
 
-declare -a args=("" "enhancers" "noncoding" "tss" "wgs")
+declare -a args=("all" "enhancers" "noncoding" "tss" "wgs")
 check_args "RUN_TYPE" "$RUN_TYPE" args
 
 declare -a args=("DHS" "noDHS")
@@ -154,18 +151,13 @@ declare -A run_codes=(
 )
 run_id="${TFBS_TYPE}-${TFBS_DHS}_${run_codes[${RUN_TYPE}]}${CDS_FILE_ID}"
 
-# Queue bash scripts
-if [[ $_GENERATE_PROFILES -eq 0 ]]; then
-  for ((i=0; i<${#mut[@]}; i++)); do
-    sbatch "$FILENAME" "${mut[i]}" "${tfbs[i]}" "$run_id" "$PACKAGE" $_BENCHMARK
-  done
+# Initialize benchmark file
+if [[ $_BENCHMARK -eq 0 ]]; then
+  BENCHMARK_FILE="./benchmark/${run_id}.txt"
+  > "$BENCHMARK_FILE"  # clear file
 fi
 
-
-
-## Generate figures.
-
-# Queue python script
-if [[ $_GENERATE_FIGURES -eq 0 ]]; then
-  python "./mut-profile.py" "$run_id" "$WHICH_DATA"
-fi
+# Queue scripts
+for ((i=0; i<${#mut[@]}; i++)); do
+  sbatch "./all-mut-profiles_helper.cl.sh" "$FILENAME" "${mut[i]}" "${tfbs[i]}" "$run_id" "$WHICH_DATA" "$PACKAGE" $_GENERATE_PROFILES $_GENERATE_FIGURES $_BENCHMARK
+done

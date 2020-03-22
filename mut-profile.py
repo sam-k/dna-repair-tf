@@ -14,7 +14,7 @@ from matplotlib import gridspec as gs
 
 
 WORKSPACE = "/data/gordanlab/samkim/dna-repair-tf"
-RUN_NAME = sys.argv[1]
+RUN_ID = sys.argv[1]
 WHICH_DATA = sys.argv[2]  # data group name
 
 
@@ -25,7 +25,7 @@ def get_dists(mut_dataset_name):
     mut_list = []
     with open(
         "{}/data/ssm.open.{}_{}_centered.bed".format(
-            WORKSPACE, RUN_NAME, mut_dataset_name
+            WORKSPACE, RUN_ID, mut_dataset_name
         )
     ) as f:
         for line in f:
@@ -104,9 +104,7 @@ def plot_dists(
             break
 
     fig.savefig(
-        "{}/figures/temp/{}_{}_mut-profile.png".format(
-            WORKSPACE, RUN_NAME, mut_dataset_name
-        ),
+        "{}/figures/temp/{}_{}.png".format(WORKSPACE, RUN_ID, mut_dataset_name),
         dpi="figure",
         transparent=True,
         bbox_inches="tight",

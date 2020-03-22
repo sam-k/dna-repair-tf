@@ -4,13 +4,14 @@
 #SBATCH --mail-type END,FAIL
 #SBATCH --time 12:00:00
 #SBATCH -c 4
-#SBATCH --output logs/mut-profile.cl.out
-#SBATCH --error logs/mut-profile.cl.err
+#SBATCH --output logs/mut-profile_all.cl.out
+#SBATCH --error logs/mut-profile_all.cl.err
 
 ## Intersects somatic mutation coords w/ TFBS coords.
 #  Does not produce intermediate files.
 #  Run on full data using cluster.
 
+module load python
 module load bedtools2
 module load bedops
 
@@ -29,6 +30,8 @@ MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 TFBS_FILE="../datasets/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}.bed"
 
 MUT_CNTR="./data/ssm.open.${TFBS_TYPE}-${TFBS_DHS}_${RUN_TYPE}_${MUT_DATASET}_centered.bed"
+
+BENCHMARK_FILE="./benchmark/${run_id}.txt"
 
 ## MUT_FILE:
 #  Mutation locations on patient genomes
@@ -94,6 +97,11 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 #  3. region_end_pos1000
 #  4. transcription_factor
 
+# Benchmark start, in ms
+if [[ $_BENCHMARK -eq 0 ]]; then
+  start_time=`python -c "from time import time; print(int(time()*1000))"`
+fi
+
 cut -f9-11,16,17 "$MUT_FILE" |  # select cols
   sort -V |  # sort
   sed -e $'s/\t/>/4' |  # preprocess to BED format
@@ -103,7 +111,7 @@ cut -f9-11,16,17 "$MUT_FILE" |  # select cols
     # intersect with TFBS ±1000bp regions
     bedtools intersect -a - -b "$TFBS_CNTR" -wa -wb -sorted
   elif [[ "$PACKAGE" == "bedops" ]]; then
-
+    exit 1
   fi |
   cut -f1-2,4,6,8 |
   awk '{dist=$2-$4-1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |
@@ -116,3 +124,11 @@ cut -f9-11,16,17 "$MUT_FILE" |  # select cols
 #  3. mutation_distance_from_center
 #  4. mutation_allele
 #  5. transcription_factor
+
+# Benchmark end, in ms
+if [[ $_BENCHMARK -eq 0 ]]; then
+  end_time=`python -c "from time import time; print(int(time()*1000))"`
+  echo "${RUN_ID}_${MUT_DATASET}"
+  echo "$((end_time-start_time)) ms"  # duration
+  echo  # newline
+fi

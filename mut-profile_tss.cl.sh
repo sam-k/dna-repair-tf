@@ -4,8 +4,8 @@
 #SBATCH --mail-type END,FAIL
 #SBATCH --time 12:00:00
 #SBATCH -c 3
-#SBATCH --output logs/mut-profile_tss.cl.out
-#SBATCH --error logs/mut-profile_tss.cl.err
+#SBATCH --output logs/mut-profile_TSS.cl.out
+#SBATCH --error logs/mut-profile_TSS.cl.err
 
 ## Intersects somatic mutation coords w/ TFBS coords.
 ## Mutation file is filtered using FANTOM5 enhancers data.
@@ -13,6 +13,7 @@
 #  Run on full data using cluster.
 
 module load bedtools2
+module load bedops
 
 # Definition of promoter regions
 UPSTREAM="2000"
@@ -97,7 +98,7 @@ MUT_CNTR="./data/ssm.open.${TFBS_TYPE}-${TFBS_DHS}_${RUN_TYPE}_${MUT_DATASET}_ce
 #  4. transcription_factor
 
 # Transform TFBSs into TFBS centers ±1000 bp.
-TFBS_CNTR="./data/supplementary/distalTFBS-${DHS}_${TFBS_DATASET}_center1000.bed"
+TFBS_CNTR="./data/supplementary/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}_center1000.bed"
 awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' "$TFBS_FILE" |
   sort -V > "$TFBS_CNTR"
 
@@ -120,12 +121,20 @@ cut -f1-2 "$TSS_FILE" |  # select cols
 #  2. chromosome_start
 #  3. chromosome_end
 
+# Benchmark start, in ms
+if [[ $_BENCHMARK -eq 0 ]]; then
+  BENCHMARK_FILE="./benchmark/${run_id}.txt"
+  echo "${RUN_ID}_${MUT_DATASET}" >> "$BENCHMARK_FILE"
+  start_time=`python -c "from time import time; print int(time()*1000)"`
+fi
+
 cut -f9-11,16-17 "$MUT_FILE" |  # select cols
   sort -V |  # sort
   sed -e $'s/\t/>/4' |  # preprocess to BED format
   sed -e 's/^/chr/' |
   uniq | # remove duplicates
   bedtools intersect -a - -b "$TSS_REG" -wa -sorted |  # intersect with assumed promoter regions
+  sort -V |
   bedtools intersect -a - -b "$TFBS_CNTR" -wa -wb -sorted |  # intersect with TFBS ±1000bp regions
   cut -f1-2,4,6,8 |
   awk '{dist=$2-$4-1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |
@@ -138,3 +147,10 @@ cut -f9-11,16-17 "$MUT_FILE" |  # select cols
 #  3. mutation_distance_from_center
 #  4. mutation_allele
 #  5. transcription_factor
+
+# Benchmark end, in ms
+if [[ $_BENCHMARK -eq 0 ]]; then
+  end_time=`python -c "from time import time; print int(time()*1000)"`
+  echo "$((end_time-start_time)) ms" >> "$BENCHMARK_FILE"  # duration
+  echo >> "$BENCHMARK_FILE"  # newline
+fi

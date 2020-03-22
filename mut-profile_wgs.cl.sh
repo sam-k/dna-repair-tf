@@ -13,6 +13,7 @@
 #  Run on full data using cluster.
 
 module load bedtools2
+module load bedops
 
 MUT_DATASET="$1"
 TFBS_DATASET="$2"
@@ -94,6 +95,13 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 #  3. region_end_pos1000
 #  4. transcription_factor
 
+# Benchmark start, in ms
+if [[ $_BENCHMARK -eq 0 ]]; then
+  BENCHMARK_FILE="./benchmark/${run_id}.txt"
+  echo "${RUN_ID}_${MUT_DATASET}" >> "$BENCHMARK_FILE"
+  start_time=`python -c "from time import time; print int(time()*1000)"`
+fi
+
 cut -f9-11,16,17,34 "$MUT_FILE" |  # select cols
   awk '$6=="WGS"' |  # get only WGS
   cut -f1-5 |  # remove sequencing_strategy col
@@ -113,3 +121,10 @@ cut -f9-11,16,17,34 "$MUT_FILE" |  # select cols
 #  3. mutation_distance_from_center
 #  4. mutation_allele
 #  5. transcription_factor
+
+# Benchmark end, in ms
+if [[ $_BENCHMARK -eq 0 ]]; then
+  end_time=`python -c "from time import time; print int(time()*1000)"`
+  echo "$((end_time-start_time)) ms" >> "$BENCHMARK_FILE"  # duration
+  echo >> "$BENCHMARK_FILE"  # newline
+fi

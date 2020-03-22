@@ -1,0 +1,277 @@
+
+proximal-DHS_WGS_MELA
+proximal-DHS_WGS_SKCA
+proximal-DHS_WGS_BRCA
+proximal-DHS_WGS_LUAD
+proximal-DHS_WGS_LUSC
+proximal-DHS_WGS_SKCM
+proximal-DHS_WGS_READ
+proximal-DHS_WGS_COAD
+proximal-DHS_WGS_COCA
+proximal-DHS_WGS_HNSC
+proximal-DHS_WGS_BLCA
+6623 ms
+
+proximal-DHS_TSS_BRCA
+proximal-DHS_TSS_COAD
+proximal-DHS_TSS_READ
+proximal-DHS_TSS_MELA
+proximal-DHS_TSS_LUSC
+proximal-DHS_TSS_LUAD
+proximal-DHS_TSS_SKCA
+proximal-DHS_TSS_SKCM
+proximal-DHS_TSS_BLCA
+proximal-DHS_TSS_HNSC
+proximal-DHS_TSS_COCA
+12729 ms
+
+7696 ms
+
+18263 ms
+
+proximal-DHS_enh_READ
+proximal-DHS_enh_LUAD
+proximal-DHS_enh_SKCA
+proximal-DHS_enh_MELA
+proximal-DHS_enh_LUSC
+proximal-DHS_enh_COCA
+proximal-DHS_enh_COAD
+19381 ms
+
+proximal-DHS_enh_BRCA
+proximal-DHS_enh_SKCM
+proximal-DHS_enh_BLCA
+proximal-DHS_enh_HNSC
+15447 ms
+
+7920 ms
+
+proximal-DHS_NC1_LUAD
+proximal-DHS_NC1_SKCM
+proximal-DHS_NC1_COAD
+proximal-DHS_NC1_LUSC
+proximal-DHS_NC1_BRCA
+proximal-DHS_NC1_MELA
+28275 ms
+
+proximal-DHS_NC1_SKCA
+proximal-DHS_NC1_READ
+proximal-DHS_NC1_COCA
+proximal-DHS_NC1_HNSC
+proximal-DHS_NC1_BLCA
+proximal-DHS_NC2_COCA
+proximal-DHS_NC2_COAD
+proximal-DHS_NC2_LUAD
+proximal-DHS_NC2_BLCA
+proximal-DHS_NC2_SKCA
+proximal-DHS_NC2_MELA
+proximal-DHS_NC2_BRCA
+proximal-DHS_NC2_LUSC
+proximal-DHS_NC2_READ
+proximal-DHS_NC2_SKCM
+proximal-DHS_NC2_HNSC
+23003 ms
+
+24092 ms
+
+16255 ms
+
+7562 ms
+
+8125 ms
+
+32994 ms
+
+23341 ms
+
+25999 ms
+
+16182 ms
+
+15800 ms
+
+30790 ms
+
+24261 ms
+
+52909 ms
+
+24419 ms
+
+25518 ms
+
+26223 ms
+
+33467 ms
+
+34596 ms
+
+62935 ms
+
+59888 ms
+
+62631 ms
+
+distal-DHS_enh_SKCA
+distal-DHS_enh_SKCM
+distal-DHS_enh_MELA
+69409 ms
+
+129271 ms
+
+134900 ms
+
+134937 ms
+
+67533 ms
+
+136758 ms
+
+169365 ms
+
+142068 ms
+
+173755 ms
+
+181054 ms
+
+184501 ms
+
+186486 ms
+
+302608 ms
+
+293491 ms
+
+316173 ms
+
+323022 ms
+
+363482 ms
+
+410260 ms
+
+440450 ms
+
+482976 ms
+
+462948 ms
+
+484270 ms
+
+486277 ms
+
+1511625 ms
+
+1563999 ms
+
+1617722 ms
+
+1675438 ms
+
+1775585 ms
+
+1865803 ms
+
+distal-DHS_enh_SKCM
+distal-DHS_enh_SKCA
+distal-DHS_enh_MELA
+66789 ms
+
+470004 ms
+
+distal-DHS_enh_SKCM
+distal-DHS_enh_MELA
+distal-DHS_enh_SKCA
+67949 ms
+
+proximal-DHS_enh_LUSC
+proximal-DHS_enh_SKCM
+proximal-DHS_enh_SKCA
+proximal-DHS_enh_MELA
+proximal-DHS_enh_READ
+proximal-DHS_enh_COCA
+proximal-DHS_enh_BRCA
+proximal-DHS_enh_COAD
+proximal-DHS_enh_LUAD
+proximal-DHS_enh_BLCA
+proximal-DHS_enh_HNSC
+8312 ms
+
+17071 ms
+
+23475 ms
+
+26394 ms
+
+35554 ms
+
+68076 ms
+
+148729 ms
+
+proximal-DHS_TSS_SKCM
+proximal-DHS_TSS_LUAD
+proximal-DHS_TSS_READ
+proximal-DHS_TSS_MELA
+proximal-DHS_TSS_LUSC
+proximal-DHS_TSS_SKCA
+proximal-DHS_TSS_BRCA
+proximal-DHS_TSS_BLCA
+proximal-DHS_TSS_COCA
+proximal-DHS_TSS_COAD
+proximal-DHS_TSS_HNSC
+7762 ms
+
+14237 ms
+
+23834 ms
+
+23495 ms
+
+193864 ms
+
+28479 ms
+
+63728 ms
+
+133241 ms
+
+153139 ms
+
+331323 ms
+
+483108 ms
+
+270670 ms
+
+476316 ms
+
+457871 ms
+
+distal-DHS_enh_SKCA
+distal-DHS_enh_MELA
+distal-DHS_enh_SKCM
+1745240 ms
+
+69186 ms
+
+distal-DHS_enh_SKCM
+distal-DHS_enh_MELA
+distal-DHS_enh_SKCA
+68549 ms
+
+468923 ms
+
+1762023 ms
+
+478817 ms
+
+1641103 ms
+
+1864126 ms
+
+1750822 ms
+
+1849720 ms
+
