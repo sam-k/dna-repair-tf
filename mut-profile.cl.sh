@@ -16,15 +16,18 @@ module load bedops
 
 MUT_DATASET="$1"
 TFBS_DATASET="$2"
-TFBS_DHS="$3"
-TFBS_TYPE="$4"
-CDS_FILE_ID="5"
-PACKAGE="$6"
+RUN_ID="$3"
+PACKAGE="$4"
+_BENCHMARK="$5"
+
+IFS='-|_'; read -ra run_args <<< "$RUN_ID"
+TFBS_TYPE="${run_args[0]}"
+TFBS_DHS="${run_args[1]}"
 
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 TFBS_FILE="../datasets/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}.bed"
 
-if [[ "${TFBS_TYPE}" != "proximal" ]]; then
+if [[ "$TFBS_TYPE" != "proximal" ]]; then
   temp="${TFBS_TYPE}TFBS_"
 fi
 MUT_CNTR="./data/ssm.open.${temp}${TFBS_DHS}_${MUT_DATASET}_centered.bed"
@@ -83,8 +86,8 @@ MUT_CNTR="./data/ssm.open.${temp}${TFBS_DHS}_${MUT_DATASET}_centered.bed"
 
 # Transform TFBSs into TFBS centers ±1000 bp.
 TFBS_CNTR="./data/supplementary/proximalTFBS-${DHS}_${TFBS_DATASET}_center1000.bed"
-awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' "${TFBS_FILE}" |
-  sort -V > "${TFBS_CNTR}"
+awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' "$TFBS_FILE" |
+  sort -V > "$TFBS_CNTR"
 
 ## TFBS_CNTR:
 #  Region of ±1000 bp around center of each TFBS
@@ -93,20 +96,20 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 #  3. region_end_pos1000
 #  4. transcription_factor
 
-cut -f9-11,16,17 "${MUT_FILE}" |  # select cols
+cut -f9-11,16,17 "$MUT_FILE" |  # select cols
   sort -V |  # sort
   sed -e $'s/\t/>/4' |  # preprocess to BED format
   sed -e 's/^/chr/' |
   uniq | # remove duplicates
-  if [[ "${PACKAGE}" == "bedtools" ]]; then
+  if [[ "$PACKAGE" == "bedtools" ]]; then
     # intersect with TFBS ±1000bp regions
-    bedtools intersect -a - -b "${TFBS_CNTR}" -wa -wb -sorted
-  elif [[ "${PACKAGE}" == "bedops" ]]; then
+    bedtools intersect -a - -b "$TFBS_CNTR" -wa -wb -sorted
+  elif [[ "$PACKAGE" == "bedops" ]]; then
 
   fi |
   cut -f1-2,4,6,8 |
   awk '{dist=$2-$4-1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |
-  sort -V > "${MUT_CNTR}"
+  sort -V > "$MUT_CNTR"
 
 ## MUT_CNTR:
 #  Mut locations as distances from centers of ±1000bp TFBS regions

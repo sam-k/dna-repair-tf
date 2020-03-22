@@ -14,21 +14,25 @@
 
 module load bedtools2
 
-MUT_DATASET="$1"
-TFBS_DATASET="$2"
-TFBS_DHS="$3"
-TFBS_TYPE="$4"
-CDS_FILE_ID="5"
-PACKAGE="$6"
-
+# Definition of promoter regions
 UPSTREAM="2000"
 DOWNSTREAM="1000"
+
+MUT_DATASET="$1"
+TFBS_DATASET="$2"
+RUN_ID="$3"
+PACKAGE="$4"
+_BENCHMARK="$5"
+
+IFS='-|_'; read -ra run_args <<< "$RUN_ID"
+TFBS_TYPE="${run_args[0]}"
+TFBS_DHS="${run_args[1]}"
 
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 TSS_FILE="../datasets/refseq_TSS_hg19_170929.bed"
 TFBS_FILE="../datasets/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}.bed"
 
-if [[ "${TFBS_TYPE}" != "proximal" ]]; then
+if [[ "$TFBS_TYPE" != "proximal" ]]; then
   temp="${TFBS_TYPE}TFBS_"
 fi
 MUT_CNTR="./data/ssm.open.${temp}TSS_${TFBS_DHS}_${MUT_DATASET}_centered.bed"
@@ -96,8 +100,8 @@ MUT_CNTR="./data/ssm.open.${temp}TSS_${TFBS_DHS}_${MUT_DATASET}_centered.bed"
 
 # Transform TFBSs into TFBS centers ±1000 bp.
 TFBS_CNTR="./data/supplementary/distalTFBS-${DHS}_${TFBS_DATASET}_center1000.bed"
-awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' "${TFBS_FILE}" |
-  sort -V > "${TFBS_CNTR}"
+awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' "$TFBS_FILE" |
+  sort -V > "$TFBS_CNTR"
 
 ## TFBS_CNTR:
 #  Region of ±1000 bp around center of each TFBS
@@ -108,9 +112,9 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 
 # Transform TSSs into their upstream regions.
 TSS_REG="./data/supplementary/refseq_TSS_up${UPSTREAM}-down${DOWNSTREAM}.bed"
-cut -f1-2 "${TSS_FILE}" |  # select cols
+cut -f1-2 "$TSS_FILE" |  # select cols
  sort -V |  # sort
- awk '{print $1"\t"($2-"'$UPSTREAM'")"\t"($2+"'$DOWNSTREAM'")}' > "${TSS_REG}"
+ awk '{print $1"\t"($2-"'$UPSTREAM'")"\t"($2+"'$DOWNSTREAM'")}' > "$TSS_REG"
 
 ## TSS_REG:
 #  Assumed promoter regions: up/downstream region of each TSS
@@ -118,16 +122,16 @@ cut -f1-2 "${TSS_FILE}" |  # select cols
 #  2. chromosome_start
 #  3. chromosome_end
 
-cut -f9-11,16-17 "${MUT_FILE}" |  # select cols
+cut -f9-11,16-17 "$MUT_FILE" |  # select cols
   sort -V |  # sort
   sed -e $'s/\t/>/4' |  # preprocess to BED format
   sed -e 's/^/chr/' |
   uniq | # remove duplicates
-  bedtools intersect -a - -b "${TSS_REG}" -wa -sorted |  # intersect with assumed promoter regions
-  bedtools intersect -a - -b "${TFBS_CNTR}" -wa -wb -sorted |  # intersect with TFBS ±1000bp regions
+  bedtools intersect -a - -b "$TSS_REG" -wa -sorted |  # intersect with assumed promoter regions
+  bedtools intersect -a - -b "$TFBS_CNTR" -wa -wb -sorted |  # intersect with TFBS ±1000bp regions
   cut -f1-2,4,6,8 |
   awk '{dist=$2-$4-1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |
-  sort -V > "${MUT_CNTR}"
+  sort -V > "$MUT_CNTR"
 
 ## MUT_CNTR:
 #  Mut locations as distances from centers of ±1000bp TFBS regions

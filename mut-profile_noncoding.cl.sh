@@ -16,10 +16,14 @@ module load bedtools2
 
 MUT_DATASET="$1"
 TFBS_DATASET="$2"
-TFBS_DHS="$3"
-TFBS_TYPE="$4"
-CDS_FILE_ID="5"
-PACKAGE="$6"
+RUN_ID="$3"
+PACKAGE="$4"
+_BENCHMARK="$5"
+
+IFS='-|_'; read -ra run_args <<< "$RUN_ID"
+TFBS_TYPE="${run_args[0]}"
+TFBS_DHS="${run_args[1]}"
+CDS_FILE_ID="${run_args[2]: -1}"
 
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 CDS_FILE_1="../datasets/coding_exons.bed"  # NC1
@@ -27,10 +31,10 @@ CDS_FILE_2="../datasets/cds.regions"  # NC2
 GEN_FILE="../datasets/human.hg38.genome"
 TFBS_FILE="../datasets/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}.bed"
 
-if [[ "${TFBS_TYPE}" != "proximal" ]]; then
+if [[ "$TFBS_TYPE" != "proximal" ]]; then
   temp="${TFBS_TYPE}TFBS_"
 fi
-case "${CDS_FILE_ID}" in
+case "$CDS_FILE_ID" in
   1 )
     CDS_FILE=CDS_FILE_1
     ;;
@@ -113,14 +117,14 @@ MUT_CNTR="./data/ssm.open.${temp}NC${CDS_FILE_ID}_${TFBS_DHS}_${MUT_DATASET}_cen
 
 # Complement coding regions to get noncoding regions.
 NONCODING="./data/supplementary/cds_regions_complement.bed"
-grep -P '^chr(\d+|[MXY])\t' "${CDS_FILE}" |  # remove alt chr coords
+grep -P '^chr(\d+|[MXY])\t' "$CDS_FILE" |  # remove alt chr coords
   sort -V |
-  bedtools complement -i - -g "${GEN_FILE}" > "${NONCODING}"
+  bedtools complement -i - -g "$GEN_FILE" > "$NONCODING"
 
 # Transform TFBSs into TFBS centers ±1000 bp.
 TFBS_CNTR="./data/supplementary/distalTFBS-${DHS}_${TFBS_DATASET}_center1000.bed"
-awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' "${TFBS_FILE}" |
-  sort -V > "${TFBS_CNTR}"
+awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' "$TFBS_FILE" |
+  sort -V > "$TFBS_CNTR"
 
 ## TFBS_CNTR:
 #  Region of ±1000 bp around center of each TFBS
@@ -129,16 +133,16 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 #  3. region_end_pos1000
 #  4. transcription_factor
 
-cut -f9-11,16-17 "${MUT_FILE}" |  # select cols
+cut -f9-11,16-17 "$MUT_FILE" |  # select cols
   sort -V |  # sort
   sed -e $'s/\t/>/4' |  # preprocess to BED format
   sed -e 's/^/chr/' |
   uniq | # remove duplicates
-  bedtools intersect -a - -b "${NONCODING}" -wa -sorted |  # intersect with noncoding regions
-  bedtools intersect -a - -b "${TFBS_CNTR}" -wa -wb -sorted |  # intersect with TFBS ±1000bp regions
+  bedtools intersect -a - -b "$NONCODING" -wa -sorted |  # intersect with noncoding regions
+  bedtools intersect -a - -b "$TFBS_CNTR" -wa -wb -sorted |  # intersect with TFBS ±1000bp regions
   cut -f1-2,4,6,8 |
   awk '{dist=$2-$4-1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |
-  sort -V > "${MUT_CNTR}"
+  sort -V > "$MUT_CNTR"
 
 ## MUT_CNTR:
 #  Mut locations as distances from centers of ±1000bp TFBS regions
