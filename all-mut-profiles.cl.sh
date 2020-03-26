@@ -109,22 +109,26 @@ case "$WHICH_DATA" in
     ;;
   # Only small (<1 GB) mutation datasets, and their TFBSs
   small )
-    declare -a mut=(
-      "BLCA"  "COAD"  "HNSC"  "LUAD"  "READ"
-    )
-    declare -a tfbs=(
-      "blca"  "crc"   "hnsc"  "luad_lusc" "crc"
-    )
+    declare -a mut=( "BLCA"  "COAD"  "HNSC"  "LUAD"  "READ")
+    declare -a tfbs=("blca"  "crc"   "hnsc"  "luad_lusc" "crc")
     ;;
   # Only skin cancers
   skcm )
-    declare -a mut=(
-      "MELA"  "SKCA"  "SKCM"
-    )
-    declare -a tfbs=(
-      "skcm"  "skcm"  "skcm"
-    )
+    declare -a mut=( "MELA"  "SKCA"  "SKCM")
+    declare -a tfbs=("skcm"  "skcm"  "skcm")
     ;;
+  # Individual cancer types
+  BLCA ) declare -a mut=("BLCA"); declare -a tfbs=("blca");;
+  BRCA ) declare -a mut=("BRCA"); declare -a tfbs=("brca");;
+  COAD ) declare -a mut=("COAD");&
+  COCA ) declare -a mut=("COCA");&
+  READ ) declare -a mut=("READ"); declare -a tfbs=("crc");;
+  HNSC ) declare -a mut=("HNSC"); declare -a tfbs=("hnsc");;
+  LUAD ) declare -a mut=("LUAD");&
+  LUSC ) declare -a mut=("LUSC"); declare -a tfbs=("luad_lusc");;
+  MELA ) declare -a mut=("MELA");&
+  SKCA ) declare -a mut=("SKCA");&
+  SKCM ) declare -a mut=("SKCM"); declare -a tfbs=("skcm");;
   # Anything else
   *)
     echo "Invalid WHICH_DATA argument: ${WHICH_DATA}"
