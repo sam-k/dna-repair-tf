@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
-#SBATCH --job-name mut-prof
+#SBATCH --job-name mut-prof_all
 #SBATCH --mail-user sdk18@duke.edu
 #SBATCH --mail-type END,FAIL
 #SBATCH --time 12:00:00
 #SBATCH -c 4
-#SBATCH --output logs/mut-profile_all.cl.out
-#SBATCH --error logs/mut-profile_all.cl.err
+#SBATCH --output logs/mut-profile_all.out.txt
+#SBATCH --error logs/mut-profile_all.err.txt
 
 ## Intersects somatic mutation coords w/ TFBS coords.
 #  Does not produce intermediate files.
 #  Run on full data using cluster.
 
-module load python
 module load bedtools2
 module load bedops
+module load python
 
 MUT_DATASET="$1"
 TFBS_DATASET="$2"
@@ -28,10 +28,11 @@ RUN_TYPE="${run_args[2]}"
 
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 TFBS_FILE="../datasets/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}.bed"
+GEN_FILE="../datasets/bedtools_hg19_sorted.txt"
 
 MUT_CNTR="./data/ssm.open.${TFBS_TYPE}-${TFBS_DHS}_${RUN_TYPE}_${MUT_DATASET}_centered.bed"
 
-BENCHMARK_FILE="./benchmark/${run_id}.txt"
+BENCHMARK_FILE="./benchmark/${RUN_ID}.txt"
 
 ## MUT_FILE:
 #  Mutation locations on patient genomes
@@ -103,13 +104,13 @@ if [[ $_BENCHMARK -eq 0 ]]; then
 fi
 
 cut -f9-11,16,17 "$MUT_FILE" |  # select cols
-  sort -V |  # sort
+  sed -e 1d |  # remove header
   sed -e $'s/\t/>/4' |  # preprocess to BED format
   sed -e 's/^/chr/' |
+  sort -V |
   uniq | # remove duplicates
   if [[ "$PACKAGE" == "bedtools" ]]; then
-    # intersect with TFBS ±1000bp regions
-    bedtools intersect -a - -b "$TFBS_CNTR" -wa -wb -sorted
+    bedtools intersect -a - -b "$TFBS_CNTR" -wa -wb -sorted -g "$GEN_FILE"  # intersect with TFBS ±1000bp regions
   elif [[ "$PACKAGE" == "bedops" ]]; then
     exit 1
   fi |
@@ -127,8 +128,8 @@ cut -f9-11,16,17 "$MUT_FILE" |  # select cols
 
 # Benchmark end, in ms
 if [[ $_BENCHMARK -eq 0 ]]; then
-  end_time=`python -c "from time import time; print(int(time()*1000))"`
-  echo "${RUN_ID}_${MUT_DATASET}"
-  echo "$((end_time-start_time)) ms"  # duration
-  echo  # newline
+  end_time=`python -c "from time import time; print int(time()*1000)"`
+  echo "${RUN_ID}_${MUT_DATASET}" >> "$BENCHMARK_FILE"
+  echo "$((end_time-start_time)) ms" >> "$BENCHMARK_FILE"  # duration
+  echo >> "$BENCHMARK_FILE"  # newline
 fi

@@ -4,8 +4,8 @@
 #SBATCH --mail-type END,FAIL
 #SBATCH --time 12:00:00
 #SBATCH -c 4
-#SBATCH --output logs/mut-profile_WGS.cl.out
-#SBATCH --error logs/mut-profile_WGS.cl.err
+#SBATCH --output logs/mut-profile_WGS.out.txt
+#SBATCH --error logs/mut-profile_WGS.err.txt
 
 ## Intersects somatic mutation coords w/ TFBS coords.
 ## Mutation file is filtered for WGS.
@@ -14,6 +14,7 @@
 
 module load bedtools2
 module load bedops
+module load python
 
 MUT_DATASET="$1"
 TFBS_DATASET="$2"
@@ -28,8 +29,11 @@ RUN_TYPE="${run_args[2]}"
 
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 TFBS_FILE="../datasets/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}.bed"
+GEN_FILE="../datasets/bedtools_hg19_sorted.txt"
 
 MUT_CNTR="./data/ssm.open.${TFBS_TYPE}-${TFBS_DHS}_${RUN_TYPE}_${MUT_DATASET}_centered.bed"
+
+BENCHMARK_FILE="./benchmark/${RUN_ID}.txt"
 
 ## MUT_FILE:
 #  Mutation locations on patient genomes
@@ -97,19 +101,18 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 
 # Benchmark start, in ms
 if [[ $_BENCHMARK -eq 0 ]]; then
-  BENCHMARK_FILE="./benchmark/${run_id}.txt"
-  echo "${RUN_ID}_${MUT_DATASET}" >> "$BENCHMARK_FILE"
   start_time=`python -c "from time import time; print int(time()*1000)"`
 fi
 
 cut -f9-11,16,17,34 "$MUT_FILE" |  # select cols
   awk '$6=="WGS"' |  # get only WGS
   cut -f1-5 |  # remove sequencing_strategy col
-  sort -V |  # sort
+  sed -e 1d |  # remove header
   sed -e $'s/\t/>/4' |  # preprocess to BED format
   sed -e 's/^/chr/' |
+  sort -V |  # sort
   uniq |  # remove duplicates
-  bedtools intersect -a - -b "$TFBS_CNTR" -wa -wb -sorted |  # intersect with TFBS ±1000bp regions
+  bedtools intersect -a - -b "$TFBS_CNTR" -wa -wb -sorted -g "$GEN_FILE" |  # intersect with TFBS ±1000bp regions
   cut -f1-2,4,6,8 |
   awk '{dist=$2-$4-1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |
   sort -V > "$MUT_CNTR"
@@ -125,6 +128,7 @@ cut -f9-11,16,17,34 "$MUT_FILE" |  # select cols
 # Benchmark end, in ms
 if [[ $_BENCHMARK -eq 0 ]]; then
   end_time=`python -c "from time import time; print int(time()*1000)"`
+  echo "${RUN_ID}_${MUT_DATASET}" >> "$BENCHMARK_FILE"
   echo "$((end_time-start_time)) ms" >> "$BENCHMARK_FILE"  # duration
   echo >> "$BENCHMARK_FILE"  # newline
 fi

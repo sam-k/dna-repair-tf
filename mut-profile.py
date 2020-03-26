@@ -116,12 +116,12 @@ def plot_dists(
 
 
 if WHICH_DATA == "small":
-    # for testing purposes
+    # small datasets, for testing purposes
     all_names = ["BLCA", "COAD", "HNSC", "LUAD", "READ"]
 elif WHICH_DATA == "skcm":
-    # use with distalTFBS-DHS_skcm.bed
+    # melanomas, for use with distalTFBS-DHS_skcm.bed
     all_names = ["MELA", "SKCA", "SKCM"]
-else:
+elif WHICH_DATA == "all":
     # everything
     all_names = [
         "BLCA",
@@ -136,6 +136,9 @@ else:
         "SKCA",
         "SKCM",
     ]
+else:
+    # single cancer type
+    all_names = [WHICH_DATA]
 
 all_counts = {}
 all_counts_by_tf = {}

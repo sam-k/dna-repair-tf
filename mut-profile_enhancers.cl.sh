@@ -4,8 +4,8 @@
 #SBATCH --mail-type END,FAIL
 #SBATCH --time 12:00:00
 #SBATCH -c 4
-#SBATCH --output logs/mut-profile_enh.cl.out
-#SBATCH --error logs/mut-profile_enh.cl.err
+#SBATCH --output logs/mut-profile_enh.out.txt
+#SBATCH --error logs/mut-profile_enh.err.txt
 
 ## Intersects somatic mutation coords w/ TFBS coords.
 ## Mutation file is filtered using FANTOM5 enhancers data.
@@ -13,7 +13,8 @@
 #  Run on full data using cluster.
 
 module load bedtools2
-# module load bedops
+module load bedops
+module load python
 
 MUT_DATASET="$1"
 TFBS_DATASET="$2"
@@ -28,10 +29,12 @@ RUN_TYPE="${run_args[2]}"
 
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 ENH_FILE="../datasets/permissive_enhancers.bed"
-GEN_FILE="../datasets/human.hg38.genome"
+GEN_FILE="../datasets/bedtools_hg19_sorted.txt"
 TFBS_FILE="../datasets/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}.bed"
 
 MUT_CNTR="./data/ssm.open.${TFBS_TYPE}-${TFBS_DHS}_${RUN_TYPE}_${MUT_DATASET}_centered.bed"
+
+BENCHMARK_FILE="./benchmark/${RUN_ID}.txt"
 
 ## MUT_FILE:
 #  Mutation locations on patient genomes
@@ -104,15 +107,14 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 
 # Benchmark start, in ms
 if [[ $_BENCHMARK -eq 0 ]]; then
-  BENCHMARK_FILE="./benchmark/${run_id}.txt"
-  echo "${RUN_ID}_${MUT_DATASET}" >> "$BENCHMARK_FILE"
   start_time=`python -c "from time import time; print int(time()*1000)"`
 fi
 
 cut -f9-11,16-17 "$MUT_FILE" |  # select cols
+  sed -e 1d |  # remove header
   sed -e $'s/\t/>/4' |  # preprocess to BED format
   sed -e 's/^/chr/' |
-  sort -V |  # sort
+  sort -V |
   uniq |  # remove duplicates
   bedtools intersect -a - -b "$ENH_PROC" -wa -sorted -g "$GEN_FILE" |  # intersect with enhancer regions
   bedtools intersect -a - -b "$TFBS_CNTR" -wa -wb -sorted -g "$GEN_FILE" |  # intersect with TFBS ±1000bp regions
@@ -131,6 +133,7 @@ cut -f9-11,16-17 "$MUT_FILE" |  # select cols
 # Benchmark end, in ms
 if [[ $_BENCHMARK -eq 0 ]]; then
   end_time=`python -c "from time import time; print int(time()*1000)"`
+  echo "${RUN_ID}_${MUT_DATASET}" >> "$BENCHMARK_FILE"
   echo "$((end_time-start_time)) ms" >> "$BENCHMARK_FILE"  # duration
   echo >> "$BENCHMARK_FILE"  # newline
 fi

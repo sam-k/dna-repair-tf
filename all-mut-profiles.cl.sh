@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 #SBATCH --job-name all-mut-profs
 #SBATCH --mail-user sdk18@duke.edu
-#SBATCH --mail-type END,FAIL
+#SBATCH --mail-type FAIL
 #SBATCH --time 12:00:00
 #SBATCH -c 1
-#SBATCH --output logs/all-mut-profiles.cl.out
-#SBATCH --error logs/all-mut-profiles.cl.err
+#SBATCH --output logs/all-mut-profiles.out.txt
+#SBATCH --error logs/all-mut-profiles.err.txt
 
 ### Calls mut-profile_TYPE.cl.sh on all datasets, as specified.
 
