@@ -101,7 +101,7 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 
 # Benchmark start, in ms
 if [[ $_BENCHMARK -eq 0 ]]; then
-  start_time=`python -c "from time import time; print int(time()*1000)"`
+  start_time=`python -c "from time import time; print(int(time()*1000))"`
 fi
 
 cut -f9-11,16,17,34 "$MUT_FILE" |  # select cols
@@ -127,7 +127,7 @@ cut -f9-11,16,17,34 "$MUT_FILE" |  # select cols
 
 # Benchmark end, in ms
 if [[ $_BENCHMARK -eq 0 ]]; then
-  end_time=`python -c "from time import time; print int(time()*1000)"`
+  end_time=`python -c "from time import time; print(int(time()*1000))"`
   echo "${RUN_ID}_${MUT_DATASET}" >> "$BENCHMARK_FILE"
   echo "$((end_time-start_time)) ms" >> "$BENCHMARK_FILE"  # duration
   echo >> "$BENCHMARK_FILE"  # newline

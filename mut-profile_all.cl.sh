@@ -128,7 +128,7 @@ cut -f9-11,16,17 "$MUT_FILE" |  # select cols
 
 # Benchmark end, in ms
 if [[ $_BENCHMARK -eq 0 ]]; then
-  end_time=`python -c "from time import time; print int(time()*1000)"`
+  end_time=`python -c "from time import time; print(int(time()*1000))"`
   echo "${RUN_ID}_${MUT_DATASET}" >> "$BENCHMARK_FILE"
   echo "$((end_time-start_time)) ms" >> "$BENCHMARK_FILE"  # duration
   echo >> "$BENCHMARK_FILE"  # newline
