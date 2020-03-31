@@ -1,0 +1,33 @@
+proximal-DHS_all_READ
+8101 ms
+
+proximal-DHS_all_HNSC
+16368 ms
+
+proximal-DHS_all_LUAD
+25204 ms
+
+proximal-DHS_all_BLCA
+26108 ms
+
+proximal-DHS_all_COAD
+35210 ms
+
+proximal-DHS_all_SKCM
+68188 ms
+
+proximal-DHS_all_LUSC
+140667 ms
+
+proximal-DHS_all_COCA
+189741 ms
+
+proximal-DHS_all_BRCA
+324932 ms
+
+proximal-DHS_all_SKCA
+483850 ms
+
+proximal-DHS_all_MELA
+1754189 ms
+
