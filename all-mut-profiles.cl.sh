@@ -15,7 +15,7 @@ TFBS_TYPE="proximal"  # proximal, distal
 TFBS_DHS="DHS"  # DHS, noDHS
 CDS_FILE_ID=""  # coding regions file ID
 
-WHICH_DATA="dhs"  # data group name
+WHICH_DATA="BRCA"  # data group name
 PACKAGE="bedtools"  # package to use
 
 # Debug flags: 0 for true, 1 for false
@@ -29,6 +29,7 @@ FILENAME="./mut-profile_${RUN_TYPE}.cl.sh"
 #  Bash script filename to be called.
 #  all
 #  enhancers
+#  merged
 #  noncoding
 #  tss
 #  wgs

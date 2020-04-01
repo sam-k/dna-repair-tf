@@ -15,16 +15,15 @@ module load bedtools2
 module load bedops
 module load python
 
+# Definition of promoter regions
+UPSTREAM="2000"
+DOWNSTREAM="1000"
+
 MUT_DATASET="$1"
 TFBS_DATASET="$2"
 RUN_ID="$3"
 PACKAGE="$4"
 _BENCHMARK="$5"
-
-IFS='-|_'; read -ra run_args <<< "$RUN_ID"
-TFBS_TYPE="${run_args[0]}"
-TFBS_DHS="${run_args[1]}"
-RUN_TYPE="${run_args[2]}"
 
 case "$TFBS_DATASET" in
   brca )      DHS_ID="E028";;
@@ -40,9 +39,13 @@ esac
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 MERGED_TFBS_FILE="../datasets/merged_ENCODE.tf.bound.union.bed"
 DHS_FILE="../datasets/${DHS_ID}-DNase.hotspot.fdr0.01.peaks.v2.bed"
+TSS_FILE="../datasets/refseq_TSS_hg19_170929.bed"
+ENH_FILE="../datasets/permissive_enhancers.bed"
 GEN_FILE="../datasets/bedtools_hg19_sorted.txt"
 
-MUT_CNTR="./data/ssm.open.${TFBS_TYPE}-${TFBS_DHS}_${RUN_TYPE}_${MUT_DATASET}_centered.bed"
+MUT_CNTR="./data/ssm.open.${RUN_ID}_${MUT_DATASET}_centered.bed"
+MUT_CNTR_PRO="./data/ssm.open.${RUN_ID}_${MUT_DATASET}_pro_centered.bed"
+MUT_CNTR_ENH="./data/ssm.open.${RUN_ID}_${MUT_DATASET}_enh_centered.bed"
 
 BENCHMARK_FILE="./benchmark/${RUN_ID}.txt"
 
@@ -103,8 +106,28 @@ BENCHMARK_FILE="./benchmark/${RUN_ID}.txt"
 #  1. chromosome
 #  2. chromosome_start
 #  3. chromosome_end
-#  4. 
-#  5. 
+#  4. ?
+#  5. ?
+
+## TSS_FILE:
+#  Transcription start sites
+#  1. chromosome
+#  2. location
+#  3. location
+
+## ENH_FILE:
+#  Enhancer regions
+#  1. chromosome
+#  2. chromosome_start
+#  3. chromosome_end
+#  4. chromosome:chromosome_start-chromosome_end
+#  5. ?
+#  6. ?
+#  7. ?
+#  8. ?
+
+
+
 
 # Sort DHS_FILE lexicographically before intersecting.
 DHS_SORTED="./data/supplementary/${DHS_ID}-DNase.hotspot.fdr0.01.peaks.v2_sorted.bed"
@@ -134,12 +157,39 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 #  3. region_end_pos1000
 #  4. transcription_factor
 
+# Transform TSSs into their upstream regions.
+TSS_REG="./data/supplementary/refseq_TSS_up${UPSTREAM}-down${DOWNSTREAM}.bed"
+cut -f1-2 "$TSS_FILE" |  # select cols
+ sort -V |  # sort
+ awk '{print $1"\t"($2-"'$UPSTREAM'")"\t"($2+"'$DOWNSTREAM'")}' > "$TSS_REG"
+
+## TSS_REG:
+#  Assumed promoter regions: up/downstream region of each TSS
+#  1. chromosome
+#  2. location
+#  3. location
+
+# Process enhancers data.
+ENH_PROC="./data/supplementary/permissive_enhancers_proc.bed"
+cut -f1-3 "$ENH_FILE" |
+  tail -n +2 |  # remove header
+  sort -V > "$ENH_PROC"
+
+## ENH_PROC:
+#  Enhancer data without headers
+#  1. chromosome
+#  2. chromosome_start
+#  3. chromosome_end
+
+
+
 # Benchmark start, in ms.
 if [[ $_BENCHMARK -eq 0 ]]; then
   start_time=`python -c "from time import time; print(int(time()*1000))"`
 fi
 
 # Intersect with mutation data.
+MUT_INTR="./data/supplementary/ssm.open.${RUN_ID}_${MUT_DATASET}_intersected.bed"
 cut -f9-11,16,17 "$MUT_FILE" |  # select cols
   sed -e 1d |  # remove header
   sed -e $'s/\t/>/4' |  # preprocess to BED format
@@ -149,9 +199,22 @@ cut -f9-11,16,17 "$MUT_FILE" |  # select cols
   if [[ "$PACKAGE" == "bedtools" ]]; then
     bedtools intersect -a - -b "$TFBS_CNTR" -wa -wb -sorted -g "$GEN_FILE"  # intersect with TFBS ±1000bp regions
   elif [[ "$PACKAGE" == "bedops" ]]; then
-    exit 1 # not yet implemented
-  fi |
-  cut -f1-2,4,6,8 |
+    exit 1  # not yet implemented
+  fi > "$MUT_INTR"
+
+## MUT_INTR:
+#  Mutations in ±1000bp active TFBS regions
+#  1. mutation_chromosome
+#  2. mutation_location
+#  3. mutation_location
+#  4. mutation_allele
+#  5. TFBS_chromosome
+#  6. TFBS_region_start_neg1000
+#  7. TFBS_region_end_pos1000
+#  8. transcription_factor
+
+# Reexpress mut locations as distances from centers of ±1000bp TFBS regions
+cut -f1-2,4,6,8 "$MUT_INTR" |
   awk '{dist=$2-$4-1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |
   sort -V > "$MUT_CNTR"
 
@@ -162,6 +225,24 @@ cut -f9-11,16,17 "$MUT_FILE" |  # select cols
 #  3. mutation_distance_from_center
 #  4. mutation_allele
 #  5. transcription_factor
+
+# Intersect further with promoters or enhancers.
+intersect_further() {
+  in_file="$1"
+  out_file="$2"
+
+  if [[ "$PACKAGE" == "bedtools" ]]; then
+    bedtools intersect -a "$MUT_INTR" -b "$in_file" -wa -sorted -g "$GEN_FILE"
+  elif [[ "$PACKAGE" == "bedops" ]]; then
+    exit 1  # not yet implemented
+  fi |
+    cut -f1-2,4,6,8 |
+    awk '{dist=$2-$4-1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |
+    sort -V |
+    uniq > "$out_file"
+}
+intersect_further "$TSS_REG" "$MUT_CNTR_PRO"
+intersect_further "$ENH_PROC" "$MUT_CNTR_ENH"
 
 # Benchmark end, in ms.
 if [[ $_BENCHMARK -eq 0 ]]; then

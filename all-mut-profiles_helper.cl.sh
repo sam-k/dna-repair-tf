@@ -20,6 +20,9 @@ _GENERATE_PROFILES="$7"
 _GENERATE_FIGURES="$8"
 _BENCHMARK="$9"
 
+IFS='-|_'; read -ra run_args <<< "$RUN_ID"
+RUN_TYPE="${run_args[2]}"
+
 # Queue bash script
 if [[ $_GENERATE_PROFILES -eq 0 ]]; then
   sbatch -W "$FILENAME" "$MUT" "$TFBS" "$RUN_ID" "$PACKAGE" $_BENCHMARK
@@ -28,4 +31,8 @@ fi
 # Run python script
 if [[ $_GENERATE_FIGURES -eq 0 ]]; then
   python "./mut-profile.py" "$RUN_ID" "$WHICH_DATA"
+  if [[ "$RUN_TYPE" == "merged" ]]; then
+    python "./mut-profile.py" "$RUN_ID" "$WHICH_DATA" "pro"
+    python "./mut-profile.py" "$RUN_ID" "$WHICH_DATA" "enh"
+  fi
 fi
