@@ -121,6 +121,19 @@ if WHICH_DATA == "small":
 elif WHICH_DATA == "skcm":
     # melanomas, for use with distalTFBS-DHS_skcm.bed
     all_names = ["MELA", "SKCA", "SKCM"]
+elif WHICH_DATA == "dhs":
+    # cancers w/ DHS data, for use with merged_ENCODE.tf.bound.union.bed
+    all_names = [
+        "BRCA",
+        "COAD",
+        "COCA",
+        "LUAD",
+        "LUSC",
+        "MELA",
+        "READ",
+        "SKCA",
+        "SKCM",
+    ]
 elif WHICH_DATA == "all":
     # everything
     all_names = [

@@ -9,13 +9,13 @@
 
 ### Calls mut-profile_TYPE.cl.sh on all datasets, as specified.
 
-RUN_TYPE="all"  # run type
+RUN_TYPE="merged"  # run type
 
 TFBS_TYPE="proximal"  # proximal, distal
 TFBS_DHS="DHS"  # DHS, noDHS
 CDS_FILE_ID=""  # coding regions file ID
 
-WHICH_DATA="all"  # data group name
+WHICH_DATA="dhs"  # data group name
 PACKAGE="bedtools"  # package to use
 
 # Debug flags: 0 for true, 1 for false
@@ -79,7 +79,7 @@ check_args() {
   invalid_arg_flag=0
 }
 
-declare -a args=("all" "enhancers" "noncoding" "tss" "wgs")
+declare -a args=("all" "enhancers" "merged" "noncoding" "tss" "wgs")
 check_args "RUN_TYPE" "$RUN_TYPE" args
 
 declare -a args=("DHS" "noDHS")
@@ -99,23 +99,34 @@ case "$WHICH_DATA" in
   # All mutation/TFBS datasets
   all )
     declare -a mut=(
-      "BLCA"  "BRCA"  "COAD"  "COCA"  "HNSC"  "LUAD"  "LUSC"
-      "MELA"  "READ"  "SKCA"  "SKCM"
+      "BLCA" "BRCA" "COAD" "COCA" "HNSC" "LUAD" "LUSC"
+      "MELA" "READ" "SKCA" "SKCM"
     )
     declare -a tfbs=(
-      "blca"  "brca"  "crc"   "crc"   "hnsc"  "luad_lusc" "luad_lusc"
-      "skcm"  "crc"   "skcm"  "skcm"
+      "blca" "brca" "crc"  "crc"  "hnsc" "luad_lusc" "luad_lusc"
+      "skcm" "crc"  "skcm" "skcm"
     )
     ;;
   # Only small (<1 GB) mutation datasets, and their TFBSs
   small )
-    declare -a mut=( "BLCA"  "COAD"  "HNSC"  "LUAD"  "READ")
-    declare -a tfbs=("blca"  "crc"   "hnsc"  "luad_lusc" "crc")
+    declare -a mut=( "BLCA" "COAD" "HNSC" "LUAD" "READ")
+    declare -a tfbs=("blca" "crc"  "hnsc" "luad_lusc" "crc")
     ;;
   # Only skin cancers
   skcm )
-    declare -a mut=( "MELA"  "SKCA"  "SKCM")
-    declare -a tfbs=("skcm"  "skcm"  "skcm")
+    declare -a mut=( "MELA" "SKCA" "SKCM")
+    declare -a tfbs=("skcm" "skcm" "skcm")
+    ;;
+  # Only cancers with DHS data 
+  dhs )
+    declare -a mut=(
+      "BRCA" "COAD" "COCA" "LUAD" "LUSC"
+      "MELA" "READ" "SKCA" "SKCM"
+    )
+    declare -a tfbs=(
+      "brca" "crc"  "crc"  "luad_lusc" "luad_lusc"
+      "skcm" "crc"  "skcm" "skcm"
+    )
     ;;
   # Individual cancer types
   BLCA ) declare -a mut=("BLCA"); declare -a tfbs=("blca");;
@@ -149,6 +160,7 @@ fi
 declare -A run_codes=(
   ["all"]="all"
   ["enhancers"]="enh"
+  ["merged"]="merged"
   ["noncoding"]="NC"
   ["tss"]="TSS"
   ["wgs"]="WGS"
