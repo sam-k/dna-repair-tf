@@ -104,6 +104,7 @@ if [[ $_BENCHMARK -eq 0 ]]; then
   start_time=`python -c "from time import time; print(int(time()*1000))"`
 fi
 
+# Intersect with mutation data.
 cut -f9-11,16,17,34 "$MUT_FILE" |  # select cols
   awk '$6=="WGS"' |  # get only WGS
   cut -f1-5 |  # remove sequencing_strategy col

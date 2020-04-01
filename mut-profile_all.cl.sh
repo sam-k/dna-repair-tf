@@ -103,6 +103,7 @@ if [[ $_BENCHMARK -eq 0 ]]; then
   start_time=`python -c "from time import time; print(int(time()*1000))"`
 fi
 
+# Intersect with mutation data.
 cut -f9-11,16,17 "$MUT_FILE" |  # select cols
   sed -e 1d |  # remove header
   sed -e $'s/\t/>/4' |  # preprocess to BED format
