@@ -16,8 +16,8 @@ from matplotlib import gridspec as gs
 WORKSPACE = "/data/gordanlab/samkim/dna-repair-tf"
 RUN_ID = sys.argv[1]  # run ID
 WHICH_DATA = sys.argv[2]  # data group name
-SUFFIX = "" if len(sys.argv) <= 3 else "_"+sys.argv[3]
-    # suffix to filename (currently only for mut-profile_merged.cl.sh)
+SUFFIX = "" if len(sys.argv) <= 3 else "_" + sys.argv[3]
+# suffix to filename (currently only for mut-profile_merged.cl.sh)
 
 
 ### Get mutation counts per position, and per position per TF ###
@@ -106,7 +106,9 @@ def plot_dists(
             break
 
     fig.savefig(
-        "{}/figures/temp/{}_{}{}.png".format(WORKSPACE, RUN_ID, mut_dataset_name, SUFFIX),
+        "{}/figures/temp/{}_{}{}.png".format(
+            WORKSPACE, RUN_ID, mut_dataset_name, SUFFIX
+        ),
         dpi="figure",
         transparent=True,
         bbox_inches="tight",
@@ -159,5 +161,4 @@ all_counts = {}
 all_counts_by_tf = {}
 for name in all_names:
     all_counts[name], all_counts_by_tf[name] = get_dists(name)
-for name in all_names:
     plot_dists(all_counts[name], all_counts_by_tf[name], name)

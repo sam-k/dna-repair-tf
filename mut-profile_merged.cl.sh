@@ -147,8 +147,9 @@ sort -V "$MERGED_TFBS_FILE" |  # sort
 
 # Transform TFBSs into TFBS centers ±1000 bp.
 TFBS_CNTR="./data/supplementary/activeTFBS_${TFBS_DATASET}_center1000.bed"
-awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' "$TFBS_FILE" |
-  sort -V > "$TFBS_CNTR"
+awk '{center=int(($2+$3)/2); print $1"\t"(center>=1000 ? center-1000 : 0)"\t"(center+1000)"\t"$4}' "$TFBS_FILE" |
+  sort -V |
+  uniq > "$TFBS_CNTR"
 
 ## TFBS_CNTR:
 #  Region of ±1000 bp around center of each TFBS
@@ -160,8 +161,9 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 # Transform TSSs into their upstream regions.
 TSS_REG="./data/supplementary/refseq_TSS_up${UPSTREAM}-down${DOWNSTREAM}.bed"
 cut -f1-2 "$TSS_FILE" |  # select cols
+ awk -v up=$UPSTREAM -v down=$DOWNSTREAM '{print $1"\t"($2>=up ? $2-up : 0)"\t"($2+down)}' |
  sort -V |  # sort
- awk '{print $1"\t"($2-"'$UPSTREAM'")"\t"($2+"'$DOWNSTREAM'")}' > "$TSS_REG"
+ uniq > "$TSS_REG"
 
 ## TSS_REG:
 #  Assumed promoter regions: up/downstream region of each TSS
@@ -214,8 +216,8 @@ cut -f9-11,16,17 "$MUT_FILE" |  # select cols
 #  8. transcription_factor
 
 # Reexpress mut locations as distances from centers of ±1000bp TFBS regions
-cut -f1-2,4,6,8 "$MUT_INTR" |
-  awk '{dist=$2-$4-1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |
+cut -f1-2,4,7-8 "$MUT_INTR" |
+  awk '{dist=$2-$4+1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |
   sort -V > "$MUT_CNTR"
 
 ## MUT_CNTR:
@@ -236,8 +238,8 @@ intersect_further() {
   elif [[ "$PACKAGE" == "bedops" ]]; then
     exit 1  # not yet implemented
   fi |
-    cut -f1-2,4,6,8 |
-    awk '{dist=$2-$4-1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |
+    cut -f1-2,4,7-8 |
+    awk '{dist=$2-$4+1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |
     sort -V |
     uniq > "$out_file"
 }

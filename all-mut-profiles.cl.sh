@@ -15,7 +15,7 @@ TFBS_TYPE="proximal"  # proximal, distal
 TFBS_DHS="DHS"  # DHS, noDHS
 CDS_FILE_ID=""  # coding regions file ID
 
-WHICH_DATA="BRCA"  # data group name
+WHICH_DATA="dhs"  # data group name
 PACKAGE="bedtools"  # package to use
 
 # Debug flags: 0 for true, 1 for false
@@ -47,7 +47,9 @@ FILENAME="./mut-profile_${RUN_TYPE}.cl.sh"
 ## WHICH_DATA:
 #  Which group of somatic mutation data to use.
 #  all
+#  dhs
 #  small
+#  small_dhs
 #  skcm
 
 ## CDS_FILE_ID:
@@ -71,33 +73,36 @@ check_args() {
   local type="$1"
   local arg="$2"
   local arr="$3[@]"
+  local _flag="$4"
   for x in "${!arr}"; do
     if [[ $x == "$arg" ]]; then
       return
     fi
   done
-  echo "Invalid ${type} argument: ${arg}"
-  invalid_arg_flag=0
+  if [[ "$_flag" -eq 0 ]]; then
+    echo "Invalid ${type} argument: ${arg}"
+    invalid_arg_flag=0
+  fi
 }
 
 declare -a args=("all" "enhancers" "merged" "noncoding" "tss" "wgs")
-check_args "RUN_TYPE" "$RUN_TYPE" args
+check_args "RUN_TYPE" "$RUN_TYPE" args 0
 
 declare -a args=("DHS" "noDHS")
-check_args "TFBS_DHS" "$TFBS_DHS" args
+check_args "TFBS_DHS" "$TFBS_DHS" args 0
 
 declare -a args=("distal" "proximal")
-check_args "TFBS_TYPE" "$TFBS_TYPE" args
+check_args "TFBS_TYPE" "$TFBS_TYPE" args 0
 
 declare -a args=("" "1" "2")
-check_args "CDS_FILE_ID" "$CDS_FILE_ID" args
+check_args "CDS_FILE_ID" "$CDS_FILE_ID" args 0
 
 declare -a args=("bedops" "bedtools")
-check_args "PACKAGE" "$PACKAGE" args
+check_args "PACKAGE" "$PACKAGE" args 0
 
 # Select datasets to use
 case "$WHICH_DATA" in
-  # All mutation/TFBS datasets
+  # All cancers
   all )
     declare -a mut=(
       "BLCA" "BRCA" "COAD" "COCA" "HNSC" "LUAD" "LUSC"
@@ -106,18 +111,7 @@ case "$WHICH_DATA" in
     declare -a tfbs=(
       "blca" "brca" "crc"  "crc"  "hnsc" "luad_lusc" "luad_lusc"
       "skcm" "crc"  "skcm" "skcm"
-    )
-    ;;
-  # Only small (<1 GB) mutation datasets, and their TFBSs
-  small )
-    declare -a mut=( "BLCA" "COAD" "HNSC" "LUAD" "READ")
-    declare -a tfbs=("blca" "crc"  "hnsc" "luad_lusc" "crc")
-    ;;
-  # Only skin cancers
-  skcm )
-    declare -a mut=( "MELA" "SKCA" "SKCM")
-    declare -a tfbs=("skcm" "skcm" "skcm")
-    ;;
+    );;
   # Only cancers with DHS data 
   dhs )
     declare -a mut=(
@@ -127,8 +121,19 @@ case "$WHICH_DATA" in
     declare -a tfbs=(
       "brca" "crc"  "crc"  "luad_lusc" "luad_lusc"
       "skcm" "crc"  "skcm" "skcm"
-    )
-    ;;
+    );;
+  # Only small (<1 GB) cancers
+  small )
+    declare -a mut=( "BLCA" "COAD" "HNSC" "LUAD" "READ")
+    declare -a tfbs=("blca" "crc"  "hnsc" "luad_lusc" "crc");;
+  # Only small (<1 GB) cancers with DHS data 
+  small_dhs )
+    declare -a mut=( "COAD" "LUAD" "READ")
+    declare -a tfbs=("crc"  "luad_lusc" "crc");;
+  # Only skin cancers
+  skcm )
+    declare -a mut=( "MELA" "SKCA" "SKCM")
+    declare -a tfbs=("skcm" "skcm" "skcm");;
   # Individual cancer types
   BLCA ) declare -a mut=("BLCA"); declare -a tfbs=("blca");;
   BRCA ) declare -a mut=("BRCA"); declare -a tfbs=("brca");;
@@ -144,8 +149,7 @@ case "$WHICH_DATA" in
   # Anything else
   *)
     echo "Invalid WHICH_DATA argument: ${WHICH_DATA}"
-    invalid_arg_flag=0
-    ;;
+    invalid_arg_flag=0;;
 esac
 
 # If any argument was invalid, then quit
