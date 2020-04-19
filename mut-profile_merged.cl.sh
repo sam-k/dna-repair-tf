@@ -5,7 +5,7 @@
 #SBATCH --time 12:00:00
 #SBATCH -c 4
 #SBATCH --output logs/mut-profile_merged.out.txt
-#SBATCH --error logs/mut-profile_merged.err.txt
+#SBATCH --error logs/mut-profile_merged.ERR.txt
 
 ## Intersects somatic mutation coords w/ TFBS coords.
 #  Does not produce intermediate files.

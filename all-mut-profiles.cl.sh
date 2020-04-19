@@ -5,17 +5,17 @@
 #SBATCH --time 12:00:00
 #SBATCH -c 1
 #SBATCH --output logs/all-mut-profiles.out.txt
-#SBATCH --error logs/all-mut-profiles.err.txt
+#SBATCH --error logs/all-mut-profiles.ERR.txt
 
 ### Calls mut-profile_TYPE.cl.sh on all datasets, as specified.
 
-RUN_TYPE="noncoding"  # run type
+RUN_TYPE="tss"  # run type
 
 TFBS_TYPE="proximal"  # proximal, distal
 TFBS_DHS="DHS"  # DHS, noDHS
-CDS_FILE_ID="1"  # coding regions file ID
+CDS_FILE_ID=""  # coding regions file ID
 
-WHICH_DATA="all"  # data group name
+WHICH_DATA="small"  # data group name
 PACKAGE="bedtools"  # package to use
 
 # Debug flags: 0 for true, 1 for false

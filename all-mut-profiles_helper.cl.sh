@@ -5,7 +5,7 @@
 #SBATCH --time 12:00:00
 #SBATCH -c 1
 #SBATCH --output logs/all-mut-profiles_helper.out.txt
-#SBATCH --error logs/all-mut-profiles_helper.err.txt
+#SBATCH --error logs/all-mut-profiles_helper.ERR.txt
 
 module load python
 module load Anaconda

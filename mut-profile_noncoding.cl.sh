@@ -4,8 +4,8 @@
 #SBATCH --mail-type END,FAIL
 #SBATCH --time 12:00:00
 #SBATCH -c 4
-#SBATCH --output logs/mut-profile_NC.out.txt
-#SBATCH --error logs/mut-profile_NC.err.txt
+#SBATCH --output logs/mut-profile_nc.out.txt
+#SBATCH --error logs/mut-profile_nc.ERR.txt
 
 ## Intersects somatic mutation coords w/ TFBS coords.
 ## Mutation file is filtered by noncoding coords.
