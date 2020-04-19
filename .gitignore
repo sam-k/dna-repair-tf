@@ -2,7 +2,7 @@
 .idea/
 test*
 figures/temp/
-benchmark/*
+benchmark/
 
 # Data
 data/
