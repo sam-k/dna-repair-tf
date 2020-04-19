@@ -34,7 +34,7 @@ CDS_FILE_2="../datasets/cds.regions"  # NC2
 GEN_FILE="../datasets/bedtools_hg19_sorted.txt"
 TFBS_FILE="../datasets/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}.bed"
 
-MUT_CNTR="./data/ssm.open.${TFBS_TYPE}-${TFBS_DHS}_${RUN_TYPE}_${MUT_DATASET}_centered.bed"
+MUT_CNTR="./data/ssm.open.${TFBS_TYPE}-${TFBS_DHS}_${RUN_TYPE}${CDS_FILE_ID}_${MUT_DATASET}_centered.bed"
 
 BENCHMARK_FILE="./benchmark/${RUN_ID}.txt"
 

@@ -13,7 +13,7 @@ RUN_TYPE="noncoding"  # run type
 
 TFBS_TYPE="proximal"  # proximal, distal
 TFBS_DHS="DHS"  # DHS, noDHS
-CDS_FILE_ID="2"  # coding regions file ID
+CDS_FILE_ID="1"  # coding regions file ID
 
 WHICH_DATA="all"  # data group name
 PACKAGE="bedtools"  # package to use
