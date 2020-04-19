@@ -110,7 +110,8 @@ def plot_dists(
             WORKSPACE, RUN_ID, mut_dataset_name, SUFFIX
         )
         .replace("proximal", "prox")
-        .replace("distal", "dist"),
+        .replace("distal", "dist")
+        .replace("DHS_", "DHS-"),
         dpi="figure",
         transparent=True,
         bbox_inches="tight",

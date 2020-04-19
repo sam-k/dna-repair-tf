@@ -40,10 +40,10 @@ BENCHMARK_FILE="./benchmark/${RUN_ID}.txt"
 
 case "$CDS_FILE_ID" in
   1 )
-    CDS_FILE=CDS_FILE_1
+    CDS_FILE="$CDS_FILE_1"
     ;;
   2 )
-    CDS_FILE=CDS_FILE_2
+    CDS_FILE="$CDS_FILE_2"
     ;;
   * )
     exit 1
