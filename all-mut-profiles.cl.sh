@@ -9,13 +9,13 @@
 
 ### Calls mut-profile_TYPE.cl.sh on all datasets, as specified.
 
-RUN_TYPE="tss"  # run type
+RUN_TYPE="noncoding"  # run type
 
 TFBS_TYPE="proximal"  # proximal, distal
 TFBS_DHS="DHS"  # DHS, noDHS
-CDS_FILE_ID=""  # coding regions file ID
+CDS_FILE_ID="2"  # coding regions file ID
 
-WHICH_DATA="small"  # data group name
+WHICH_DATA="all"  # data group name
 PACKAGE="bedtools"  # package to use
 
 # Debug flags: 0 for true, 1 for false

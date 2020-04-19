@@ -117,7 +117,7 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' 
 TSS_REG="./data/supplementary/refseq_TSS_up${UPSTREAM}-down${DOWNSTREAM}.bed"
 cut -f1-2 "$TSS_FILE" |  # select cols
  sort -V |  # sort
- awk '{low=$2-"'$UPSTREAM'"<0?0:$2-"'$UPSTREAM'"; print $1"\t"($2-low)"\t"($2+"'$DOWNSTREAM'")}' > "$TSS_REG"
+ awk '{diff=$2-"'$UPSTREAM'"; print $1"\t"(diff<0?0:diff)"\t"($2+"'$DOWNSTREAM'")}' > "$TSS_REG"
 
 ## TSS_REG:
 #  Assumed promoter regions: up/downstream region of each TSS
