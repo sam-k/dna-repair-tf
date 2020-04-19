@@ -1,9 +1,0 @@
-proximal-DHS__COAD
-33921 ms
-
-proximal-DHS__READ
-12770 ms
-
-proximal-DHS__LUAD
-22019 ms
-
