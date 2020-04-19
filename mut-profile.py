@@ -14,7 +14,7 @@ from matplotlib import gridspec as gs
 
 
 WORKSPACE = "/data/gordanlab/samkim/dna-repair-tf"
-RUN_ID = sys.argv[1].replace("proximal", "prox").replace("distal", "dist")  # run ID
+RUN_ID = sys.argv[1]  # run ID
 WHICH_DATA = sys.argv[2]  # data group name
 SUFFIX = "" if len(sys.argv) <= 3 else "_" + sys.argv[3]
 # suffix to filename (currently only for mut-profile_merged.cl.sh)
@@ -108,7 +108,9 @@ def plot_dists(
     fig.savefig(
         "{}/figures/temp/{}_{}{}.png".format(
             WORKSPACE, RUN_ID, mut_dataset_name, SUFFIX
-        ),
+        )
+        .replace("proximal", "prox")
+        .replace("distal", "dist"),
         dpi="figure",
         transparent=True,
         bbox_inches="tight",
