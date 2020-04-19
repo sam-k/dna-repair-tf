@@ -4,8 +4,8 @@
 #SBATCH --mail-type FAIL
 #SBATCH --time 12:00:00
 #SBATCH -c 1
-#SBATCH --output logs/all-mut-profiles_helper.out.txt
-#SBATCH --error logs/all-mut-profiles_helper.ERR.txt
+#SBATCH --output logs/OUT_all-mut-profiles_helper.txt
+#SBATCH --error logs/ERR_all-mut-profiles_helper.txt
 
 module load python
 module load Anaconda

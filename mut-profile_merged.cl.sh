@@ -4,8 +4,8 @@
 #SBATCH --mail-type END,FAIL
 #SBATCH --time 12:00:00
 #SBATCH -c 4
-#SBATCH --output logs/mut-profile_merged.out.txt
-#SBATCH --error logs/mut-profile_merged.ERR.txt
+#SBATCH --output logs/OUT_mut-profile_merged.txt
+#SBATCH --error logs/ERR_mut-profile_merged.txt
 
 ## Intersects somatic mutation coords w/ TFBS coords.
 #  Does not produce intermediate files.

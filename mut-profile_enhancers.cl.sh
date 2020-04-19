@@ -4,8 +4,8 @@
 #SBATCH --mail-type END,FAIL
 #SBATCH --time 12:00:00
 #SBATCH -c 4
-#SBATCH --output logs/mut-profile_enh.out.txt
-#SBATCH --error logs/mut-profile_enh.ERR.txt
+#SBATCH --output logs/OUT_mut-profile_enh.txt
+#SBATCH --error logs/ERR_mut-profile_enh.txt
 
 ## Intersects somatic mutation coords w/ TFBS coords.
 ## Mutation file is filtered using FANTOM5 enhancers data.

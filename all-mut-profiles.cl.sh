@@ -4,18 +4,18 @@
 #SBATCH --mail-type FAIL
 #SBATCH --time 12:00:00
 #SBATCH -c 1
-#SBATCH --output logs/all-mut-profiles.out.txt
-#SBATCH --error logs/all-mut-profiles.ERR.txt
+#SBATCH --output logs/OUT_all-mut-profiles.txt
+#SBATCH --error logs/ERR_all-mut-profiles.txt
 
 ### Calls mut-profile_TYPE.cl.sh on all datasets, as specified.
 
-RUN_TYPE="noncoding"  # run type
+RUN_TYPE="all"  # run type
 
-TFBS_TYPE="proximal"  # proximal, distal
+TFBS_TYPE="distal"  # proximal, distal
 TFBS_DHS="DHS"  # DHS, noDHS
-CDS_FILE_ID="2"  # coding regions file ID
+CDS_FILE_ID=""  # coding regions file ID
 
-WHICH_DATA="all"  # data group name
+WHICH_DATA="skcm"  # data group name
 PACKAGE="bedtools"  # package to use
 
 # Debug flags: 0 for true, 1 for false
