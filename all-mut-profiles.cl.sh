@@ -9,13 +9,13 @@
 
 ### Calls mut-profile_TYPE.cl.sh on all datasets, as specified.
 
-RUN_TYPE="all"  # run type
+RUN_TYPE="merged"  # run type
 
-TFBS_TYPE="distal"  # proximal, distal
+TFBS_TYPE="proximal"  # proximal, distal
 TFBS_DHS="DHS"  # DHS, noDHS
 CDS_FILE_ID=""  # coding regions file ID
 
-WHICH_DATA="skcm"  # data group name
+WHICH_DATA="all"  # data group name
 PACKAGE="bedtools"  # package to use
 
 # Debug flags: 0 for true, 1 for false
@@ -29,20 +29,20 @@ FILENAME="./mut-profile_${RUN_TYPE}.cl.sh"
 #  Bash script filename to be called.
 #  all
 #  enhancers
-#  merged
+#  merged (dhs, small_dhs)
 #  noncoding
 #  tss
 #  wgs
 
 ## TFBS_DHS:
 #  Whether to use active or inactive TFBSs.
-#  DHS (active)
-#  noDHS (inactive)
+#  DHS
+#  noDHS
 
 ## TFBS_TYPE:
 #  Whether to use proximal or distal TFBSs.
 #  proximal
-#  distal (works with melanoma datasets only)
+#  distal (skcm)
 
 ## WHICH_DATA:
 #  Which group of somatic mutation data to use.

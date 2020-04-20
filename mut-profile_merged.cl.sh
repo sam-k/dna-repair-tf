@@ -36,6 +36,7 @@ case "$TFBS_DATASET" in
     ;;
 esac
 
+# Import data
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 MERGED_TFBS_FILE="../datasets/merged_ENCODE.tf.bound.union.bed"
 DHS_FILE="../datasets/${DHS_ID}-DNase.hotspot.fdr0.01.peaks.v2.bed"
@@ -43,10 +44,10 @@ TSS_FILE="../datasets/refseq_TSS_hg19_170929.bed"
 ENH_FILE="../datasets/permissive_enhancers.bed"
 GEN_FILE="../datasets/bedtools_hg19_sorted.txt"
 
+# Export data
 MUT_CNTR="./data/ssm.open.${RUN_ID}_${MUT_DATASET}_centered.bed"
 MUT_CNTR_PRO="./data/ssm.open.${RUN_ID}_${MUT_DATASET}_pro_centered.bed"
 MUT_CNTR_ENH="./data/ssm.open.${RUN_ID}_${MUT_DATASET}_enh_centered.bed"
-
 BENCHMARK_FILE="./benchmark/${RUN_ID}.txt"
 
 ## MUT_FILE:

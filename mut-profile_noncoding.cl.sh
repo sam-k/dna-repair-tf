@@ -28,14 +28,15 @@ TFBS_DHS="${run_args[1]}"
 RUN_TYPE="${run_args[2]: :2}"
 CDS_FILE_ID="${run_args[2]: -1}"
 
+# Import data
 MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 CDS_FILE_1="../datasets/coding_exons.bed"  # NC1
 CDS_FILE_2="../datasets/cds.regions"  # NC2
 GEN_FILE="../datasets/bedtools_hg19_sorted.txt"
 TFBS_FILE="../datasets/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}.bed"
 
+# Export data
 MUT_CNTR="./data/ssm.open.${TFBS_TYPE}-${TFBS_DHS}_${RUN_TYPE}${CDS_FILE_ID}_${MUT_DATASET}_centered.bed"
-
 BENCHMARK_FILE="./benchmark/${RUN_ID}.txt"
 
 case "$CDS_FILE_ID" in
