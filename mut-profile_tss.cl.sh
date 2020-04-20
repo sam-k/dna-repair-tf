@@ -32,10 +32,10 @@ TFBS_DHS="${run_args[1]}"
 RUN_TYPE="${run_args[2]}"
 
 # Import data
-MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
+MUT_FILE="../datasets/ssm/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 TSS_FILE="../datasets/refseq_TSS_hg19_170929.bed"
-TFBS_FILE="../datasets/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}.bed"
-GEN_FILE="../datasets/bedtools_hg19_sorted.txt"
+TFBS_FILE="../datasets/tfbs/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}.bed"
+GEN_FILE="../datasets/hg19/bedtools_hg19_sorted.txt"
 
 # Export data
 MUT_CNTR="./data/ssm.open.${TFBS_TYPE}-${TFBS_DHS}_${RUN_TYPE}_${MUT_DATASET}_centered.bed"

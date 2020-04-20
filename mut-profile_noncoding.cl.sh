@@ -29,11 +29,11 @@ RUN_TYPE="${run_args[2]: :2}"
 CDS_FILE_ID="${run_args[2]: -1}"
 
 # Import data
-MUT_FILE="../datasets/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
+MUT_FILE="../datasets/ssm/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
 CDS_FILE_1="../datasets/coding_exons.bed"  # NC1
 CDS_FILE_2="../datasets/cds.regions"  # NC2
-GEN_FILE="../datasets/bedtools_hg19_sorted.txt"
-TFBS_FILE="../datasets/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}.bed"
+GEN_FILE="../datasets/hg19/bedtools_hg19_sorted.txt"
+TFBS_FILE="../datasets/tfbs/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}.bed"
 
 # Export data
 MUT_CNTR="./data/ssm.open.${TFBS_TYPE}-${TFBS_DHS}_${RUN_TYPE}${CDS_FILE_ID}_${MUT_DATASET}_centered.bed"
