@@ -32,7 +32,7 @@ fi
 if [[ $_GENERATE_FIGURES -eq 0 ]]; then
   python "./mut-profile.py" "$RUN_ID" "$MUT"
   case "$RUN_TYPE" in
-    merged )
+    merged ) ;&
     mergedbg )
       python "./mut-profile.py" "$RUN_ID" "$MUT" "pro"
       python "./mut-profile.py" "$RUN_ID" "$MUT" "enh";;

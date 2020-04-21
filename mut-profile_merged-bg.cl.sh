@@ -153,9 +153,10 @@ sort -V "$MERGED_TFBS_FILE" |  # sort
 
 # Find parts of DHSs not found in bound DHSs. (background)
 UNBOUND_DHS="./data/supplementary/unboundDHS_${TFBS_DATASET}.bed"
-bedtools subtract -a "$TOTAL_DHS" -b "$BOUND_DHS" > "$UNBOUND_DHS"
+bedtools subtract -a "$TOTAL_DHS" -b "$BOUND_DHS" |
+  sort -V > "$UNBOUND_DHS"
 UNBOUND_FA="./data/supplementary/unboundDHS_${TFBS_DATASET}.fa"
-bedtools getfasta -fi "$GEN_FA" -bed "$UNBOUND_DHS" > "$UNBOUND_FA"
+bedtools getfasta -fi "$GEN_FA" -bed "$UNBOUND_DHS" -fo "$UNBOUND_FA"
 
 
 
