@@ -16,18 +16,21 @@ from matplotlib import gridspec as gs
 WORKSPACE = "/data/gordanlab/samkim/dna-repair-tf"
 RUN_ID = sys.argv[1]  # run ID
 WHICH_DATA = sys.argv[2]  # data group name
-SUFFIX = "" if len(sys.argv) <= 3 else "_" + sys.argv[3]
+SUFFIX = "" if len(sys.argv) <= 3 else sys.argv[3]
 # suffix to filename (currently only for merged and merged-bg)
 
 
 ### Get mutation counts per position, and per position per TF ###
 
 
-def get_dists(mut_dataset_name):
+def get_dists(mut_dataset_name=None, suffix=None):
+    if mut_dataset_name is None:
+        return {}, {}
+
     mut_list = []
     with open(
         "{}/data/ssm.open.{}_{}{}_centered.bed".format(
-            WORKSPACE, RUN_ID, mut_dataset_name, SUFFIX
+            WORKSPACE, RUN_ID, mut_dataset_name, "" if suffix is None else "_" + suffix,
         )
     ) as f:
         for line in f:
@@ -53,11 +56,14 @@ def get_dists(mut_dataset_name):
 def plot_dists(
     counts,
     counts_by_tf,
-    mut_dataset_name=None,
+    counts_2=None,
+    counts_2_by_tf=None,
+    name=None,
     figsize=(10, 14),
     h1=0.2,
     h2=0.6,
     w2=0.5,
+    save_fig=True,
 ):
     fig = plt.figure(figsize=figsize)
     plt.subplots_adjust(hspace=h1)
@@ -65,34 +71,53 @@ def plot_dists(
     gs1 = gs.GridSpecFromSubplotSpec(1, 6, subplot_spec=outer[0])
     gs2 = gs.GridSpecFromSubplotSpec(5, 6, subplot_spec=outer[1], hspace=h2, wspace=w2)
 
+    # Create large graph of all TFs
+    ax1 = plt.subplot(gs1[:, 1:-1])
+
+    # Default, or bound DHS
     X1 = sorted([int(dist) for dist in counts.keys()])
     y1 = [counts[dist] for dist in X1]
-
-    ax1 = plt.subplot(gs1[:, 1:-1])
     ax1.plot(X1, y1)
+
+    # Unbound DHS
+    if counts_2 is not None and counts_2_by_tf is not None:
+        X1_2 = sorted([int(dist) for dist in counts_2.keys()])
+        y1_2 = [counts_2[dist] for dist in X1_2]
+        ax1.plot(X1_2, y1_2)
+
+    # Style large graph
     ax1.set_xlim(-1000, 1000)
     ax1.set_ylim(0, None)
     ax1.set_xlabel("Distance from TFBS center (bp)")
     ax1.set_ylabel("Number of mutations")
-    if mut_dataset_name is None:
+    if name is None:
         ax1.set_title("Mutation profile for all TFs")
     else:
-        ax1.set_title("{} mutation profile for all TFs".format(mut_dataset_name))
+        ax1.set_title("{} mutation profile for all TFs".format(name))
 
+    # Create small graphs of every TF
     ordered_counts = sorted(
         counts_by_tf.items(), key=lambda t: sum(t[1].values()), reverse=True
     )
     row, col = 0, 0
-    for tf, counts in ordered_counts:
-        X2 = sorted([int(dist) for dist in counts.keys()])
-        y2 = [counts[dist] for dist in X2]
-
+    for tf, tf_counts in ordered_counts:
         ax2 = plt.subplot(gs2[row, col])
+
+        # Default, or bound DHS
+        X2 = sorted([int(dist) for dist in tf_counts.keys()])
+        y2 = [tf_counts[dist] for dist in X2]
         ax2.plot(X2, y2)
+
+        # Unbound DHS
+        if counts_2 is not None and counts_2_by_tf is not None and tf in counts_2_by_tf:
+            X2_2 = sorted([int(dist) for dist in counts_2_by_tf[tf].keys()])
+            y2_2 = [counts_2_by_tf[tf][dist] for dist in X2_2]
+            ax2.plot(X2_2, y2_2)
+
+        # Style small graph
         ax2.set_xlim(-1000, 1000)
         ax2.set_ylim(0)
         ax2.set_title(tf)
-
         if not ax2.is_last_row():
             plt.setp(ax2.get_xticklabels(), visible=False)
         if not ax2.is_first_col():
@@ -105,18 +130,20 @@ def plot_dists(
         if row >= 5:
             break
 
-    fig.savefig(
-        "{}/figures/temp/{}_{}{}.png".format(
-            WORKSPACE, RUN_ID, mut_dataset_name, SUFFIX
+    # Save figure
+    if save_fig:
+        fig.savefig(
+            "{}/figures/temp/{}_{}{}.png".format(WORKSPACE, RUN_ID, name, SUFFIX)
+            .replace("proximal", "prox")
+            .replace("distal", "dist")
+            .replace("DHS_", "DHS-"),
+            dpi="figure",
+            transparent=True,
+            bbox_inches="tight",
+            pad_inches=0,
         )
-        .replace("proximal", "prox")
-        .replace("distal", "dist")
-        .replace("DHS_", "DHS-"),
-        dpi="figure",
-        transparent=True,
-        bbox_inches="tight",
-        pad_inches=0,
-    )
+    else:
+        plt.show()
 
 
 ### Actually run the datasets ###
@@ -163,5 +190,18 @@ else:
 all_counts = {}
 all_counts_by_tf = {}
 for name in all_names:
-    all_counts[name], all_counts_by_tf[name] = get_dists(name)
-    plot_dists(all_counts[name], all_counts_by_tf[name], name)
+    if RUN_ID.endswith("mergedbg"):
+        all_counts[name], all_counts_by_tf[name] = get_dists(name, SUFFIX + "_bound")
+        all_counts_2[name], all_counts_2_by_tf[name] = get_dists(
+            name, SUFFIX + "_unbound"
+        )
+        plot_dists(
+            all_counts[name],
+            all_counts_by_tf[name],
+            all_counts_2[name],
+            all_counts_2_by_tf[name],
+            name=name,
+        )
+    else:
+        all_counts[name], all_counts_by_tf[name] = get_dists(name)
+        plot_dists(all_counts[name], all_counts_by_tf[name], name=name)
