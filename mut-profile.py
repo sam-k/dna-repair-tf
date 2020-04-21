@@ -189,6 +189,8 @@ else:
 
 all_counts = {}
 all_counts_by_tf = {}
+all_counts_2 = {}
+all_counts_2_by_tf = {}
 for name in all_names:
     if RUN_ID.endswith("mergedbg"):
         all_counts[name], all_counts_by_tf[name] = get_dists(name, SUFFIX + "_bound")
