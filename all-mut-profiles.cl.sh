@@ -9,19 +9,19 @@
 
 ### Calls mut-profile_TYPE.cl.sh on all datasets, as specified.
 
-RUN_TYPE="merged"  # run type
+RUN_TYPE="merged-bg"  # run type
 
 TFBS_TYPE="proximal"  # proximal, distal
 TFBS_DHS="DHS"  # DHS, noDHS
 CDS_FILE_ID=""  # coding regions file ID
 
-WHICH_DATA="all"  # data group name
+WHICH_DATA="small_dhs"  # data group name
 PACKAGE="bedtools"  # package to use
 
 # Debug flags: 0 for true, 1 for false
 _GENERATE_PROFILES=0
-_GENERATE_FIGURES=0
-_BENCHMARK=0
+_GENERATE_FIGURES=1
+_BENCHMARK=1
 
 FILENAME="./mut-profile_${RUN_TYPE}.cl.sh"
 
@@ -30,6 +30,7 @@ FILENAME="./mut-profile_${RUN_TYPE}.cl.sh"
 #  all
 #  enhancers
 #  merged (dhs, small_dhs)
+#  merged-bg (dhs, small_dhs)
 #  noncoding
 #  tss
 #  wgs
@@ -85,7 +86,7 @@ check_args() {
   fi
 }
 
-declare -a args=("all" "enhancers" "merged" "noncoding" "tss" "wgs")
+declare -a args=("all" "enhancers" "merged" "merged-bg" "noncoding" "tss" "wgs")
 check_args "RUN_TYPE" "$RUN_TYPE" args 0
 
 declare -a args=("DHS" "noDHS")
@@ -112,7 +113,7 @@ case "$WHICH_DATA" in
       "blca" "brca" "crc"  "crc"  "hnsc" "luad_lusc" "luad_lusc"
       "skcm" "crc"  "skcm" "skcm"
     );;
-  # Only cancers with DHS data 
+  # Only cancers with DHS data
   dhs )
     declare -a mut=(
       "BRCA" "COAD" "COCA" "LUAD" "LUSC"
@@ -166,6 +167,7 @@ declare -A run_codes=(
   ["all"]="all"
   ["enhancers"]="enh"
   ["merged"]="merged"
+  ["merged-bg"]="mergedbg"
   ["noncoding"]="NC"
   ["tss"]="TSS"
   ["wgs"]="WGS"

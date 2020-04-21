@@ -31,8 +31,10 @@ fi
 # Run python script.
 if [[ $_GENERATE_FIGURES -eq 0 ]]; then
   python "./mut-profile.py" "$RUN_ID" "$MUT"
-  if [[ "$RUN_TYPE" == "merged" ]]; then
-    python "./mut-profile.py" "$RUN_ID" "$MUT" "pro"
-    python "./mut-profile.py" "$RUN_ID" "$MUT" "enh"
-  fi
+  case "$RUN_TYPE" in
+    merged )
+    mergedbg )
+      python "./mut-profile.py" "$RUN_ID" "$MUT" "pro"
+      python "./mut-profile.py" "$RUN_ID" "$MUT" "enh";;
+  esac
 fi
