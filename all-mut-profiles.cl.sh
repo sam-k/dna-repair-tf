@@ -15,12 +15,12 @@ TFBS_TYPE="proximal"  # proximal, distal
 TFBS_DHS="DHS"  # DHS, noDHS
 CDS_FILE_ID=""  # coding regions file ID
 
-WHICH_DATA="small_dhs"  # data group name
+WHICH_DATA="dhs"  # data group name
 PACKAGE="bedtools"  # package to use
 
 # Debug flags: 0 for true, 1 for false
 _GENERATE_PROFILES=0
-_GENERATE_FIGURES=1
+_GENERATE_FIGURES=0
 _BENCHMARK=1
 
 FILENAME="./mut-profile_${RUN_TYPE}.cl.sh"
@@ -138,14 +138,14 @@ case "$WHICH_DATA" in
   # Individual cancer types
   BLCA ) declare -a mut=("BLCA"); declare -a tfbs=("blca");;
   BRCA ) declare -a mut=("BRCA"); declare -a tfbs=("brca");;
-  COAD ) declare -a mut=("COAD");&
-  COCA ) declare -a mut=("COCA");&
+  COAD ) declare -a mut=("COAD"); declare -a tfbs=("crc");;
+  COCA ) declare -a mut=("COCA"); declare -a tfbs=("crc");;
   READ ) declare -a mut=("READ"); declare -a tfbs=("crc");;
   HNSC ) declare -a mut=("HNSC"); declare -a tfbs=("hnsc");;
-  LUAD ) declare -a mut=("LUAD");&
+  LUAD ) declare -a mut=("LUAD"); declare -a tfbs=("luad_lusc");;
   LUSC ) declare -a mut=("LUSC"); declare -a tfbs=("luad_lusc");;
-  MELA ) declare -a mut=("MELA");&
-  SKCA ) declare -a mut=("SKCA");&
+  MELA ) declare -a mut=("MELA"); declare -a tfbs=("skcm");;
+  SKCA ) declare -a mut=("SKCA"); declare -a tfbs=("skcm");;
   SKCM ) declare -a mut=("SKCM"); declare -a tfbs=("skcm");;
   # Anything else
   *)

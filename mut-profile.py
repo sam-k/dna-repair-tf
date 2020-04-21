@@ -75,13 +75,13 @@ def plot_dists(
     ax1 = plt.subplot(gs1[:, 1:-1])
 
     # Default, or bound DHS
-    X1 = sorted([int(dist) for dist in counts.keys()])
+    X1 = sorted([int(dist) for dist in counts])
     y1 = [counts[dist] for dist in X1]
     ax1.plot(X1, y1)
 
     # Unbound DHS
     if counts_2 is not None and counts_2_by_tf is not None:
-        X1_2 = sorted([int(dist) for dist in counts_2.keys()])
+        X1_2 = sorted([int(dist) for dist in counts_2])
         y1_2 = [counts_2[dist] for dist in X1_2]
         ax1.plot(X1_2, y1_2)
 
@@ -104,13 +104,13 @@ def plot_dists(
         ax2 = plt.subplot(gs2[row, col])
 
         # Default, or bound DHS
-        X2 = sorted([int(dist) for dist in tf_counts.keys()])
+        X2 = sorted([int(dist) for dist in tf_counts])
         y2 = [tf_counts[dist] for dist in X2]
         ax2.plot(X2, y2)
 
         # Unbound DHS
         if counts_2 is not None and counts_2_by_tf is not None and tf in counts_2_by_tf:
-            X2_2 = sorted([int(dist) for dist in counts_2_by_tf[tf].keys()])
+            X2_2 = sorted([int(dist) for dist in counts_2_by_tf[tf]])
             y2_2 = [counts_2_by_tf[tf][dist] for dist in X2_2]
             ax2.plot(X2_2, y2_2)
 
@@ -133,7 +133,9 @@ def plot_dists(
     # Save figure
     if save_fig:
         fig.savefig(
-            "{}/figures/temp/{}_{}{}.png".format(WORKSPACE, RUN_ID, name, SUFFIX)
+            "{}/figures/temp/{}_{}{}.png".format(
+                WORKSPACE, RUN_ID, name, ("-" if len(SUFFIX) > 0 else "") + SUFFIX
+            )
             .replace("proximal", "prox")
             .replace("distal", "dist")
             .replace("DHS_", "DHS-"),
@@ -193,9 +195,11 @@ all_counts_2 = {}
 all_counts_2_by_tf = {}
 for name in all_names:
     if RUN_ID.endswith("mergedbg"):
-        all_counts[name], all_counts_by_tf[name] = get_dists(name, SUFFIX + "_bound")
+        all_counts[name], all_counts_by_tf[name] = get_dists(
+            name, SUFFIX + ("_" if len(SUFFIX) > 0 else "") + "bound"
+        )
         all_counts_2[name], all_counts_2_by_tf[name] = get_dists(
-            name, SUFFIX + "_unbound"
+            name, SUFFIX + ("_" if len(SUFFIX) > 0 else "") + "unbound"
         )
         plot_dists(
             all_counts[name],

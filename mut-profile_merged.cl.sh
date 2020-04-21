@@ -152,8 +152,9 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center>=1000 ? center-1000 : 0)"\t"(ce
   sort -V |
   uniq > "$TFBS_CNTR"
 
-## TFBS_CNTR:
-#  Region of ±1000 bp around center of each TFBS
+## TFBS_FILE, TFBS_CNTR:
+#  FILE: Bound DHSs
+#  CNTR: Region of ±1000 bp around center of each TFBS
 #  1. chromosome
 #  2. region_start_neg1000
 #  3. region_end_pos1000

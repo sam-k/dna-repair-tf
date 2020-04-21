@@ -139,7 +139,7 @@ sort -V "$DHS_FILE" |  # sort
   uniq > "$TOTAL_DHS"  # remove duplicates
 
 # Build active TFBSs from merged TFBSs and cancer-specific DHSs.
-BOUND_DHS="./data/supplementary/activeTFBS_${TFBS_DATASET}.bed"
+BOUND_DHS="./data/supplementary/boundDHS_${TFBS_DATASET}.bed"
 sort -V "$MERGED_TFBS_FILE" |  # sort
   uniq |  # remove duplicates
   if [[ "$PACKAGE" == "bedtools" ]]; then
@@ -147,16 +147,32 @@ sort -V "$MERGED_TFBS_FILE" |  # sort
   elif [[ "$PACKAGE" == "bedops" ]]; then
     exit 1 # not yet implemented
   fi |
-  sort -V > "$BOUND_DHS"
-
-# (No TFBS_CNTR step)
+  sort -V |
+  uniq > "$BOUND_DHS"
+BOUND_DHS_CNTR="./data/supplementary/boundDHS_${TFBS_DATASET}_center1000.bed"
+awk '{center=int(($2+$3)/2); print $1"\t"(center>=1000 ? center-1000 : 0)"\t"(center+1000)"\t"$4}' "$BOUND_DHS" |  # transform into centers ±1000 bp
+  sort -V |
+  uniq > "$BOUND_DHS_CNTR"
 
 # Find parts of DHSs not found in bound DHSs. (background)
 UNBOUND_DHS="./data/supplementary/unboundDHS_${TFBS_DATASET}.bed"
 bedtools subtract -a "$TOTAL_DHS" -b "$BOUND_DHS" |
-  sort -V > "$UNBOUND_DHS"
-UNBOUND_FA="./data/supplementary/unboundDHS_${TFBS_DATASET}.fa"
+  cut -f1-4 |
+  sort -V |
+  uniq > "$UNBOUND_DHS"
+UNBOUND_DHS_CNTR="./data/supplementary/unboundDHS_${TFBS_DATASET}_center1000.bed"
+awk '{center=int(($2+$3)/2); print $1"\t"(center>=1000 ? center-1000 : 0)"\t"(center+1000)"\t"$4}' "$UNBOUND_DHS" |  # transform into centers ±1000 bp
+  sort -V |
+  uniq > "$UNBOUND_DHS_CNTR"
+UNBOUND_FA="./data/supplementary/unboundDHS_${TFBS_DATASET}_center1000.fa"
 bedtools getfasta -fi "$GEN_FA" -bed "$UNBOUND_DHS" -fo "$UNBOUND_FA"
+
+## BOUND_DHS, UNBOUND_DHS:
+#  CNTR: Region of ±1000 bp around center of each region
+#  1. chromosome
+#  2. region_start_neg1000
+#  3. region_end_pos1000
+#  4. transcription_factor
 
 
 
@@ -212,7 +228,7 @@ intersect_further() {
   elif [[ "$PACKAGE" == "bedops" ]]; then
     exit 1  # not yet implemented
   fi |
-    cut -f1-2,4,6-8 "$_intr_file" |
+    cut -f1-2,4,6-8 |
     awk '{dist=$2-int(($4+$5)/2); print $1"\t"dist"\t"dist"\t"$3"\t"$6}' |
     sort -V |
     uniq > "$_reg_cntr_file"
@@ -224,7 +240,7 @@ intersect() {
   intr_file="$2"
   cntr_file="$3"
   pro_cntr_file="$4"
-  enh_cntr_file="$4"
+  enh_cntr_file="$5"
 
   # Intersect with mutation data.
   if [[ "$PACKAGE" == "bedtools" ]]; then
@@ -243,11 +259,11 @@ intersect() {
   intersect_further "$intr_file" "$ENH_PROC" "$enh_cntr_file"
 }
 
-BOUND_MUT_INTR="./data/supplementary/ssm.open.${RUN_ID}_${MUT_DATASET}_intersected_bound.bed"
-intersect "$BOUND_DHS" "$BOUND_MUT_INTR" "$BOUND_MUT_CNTR" "$BOUND_MUT_CNTR_PRO" "$BOUND_MUT_CNTR_ENH"
+BOUND_MUT_INTR="./data/supplementary/ssm.open.${RUN_ID}_${MUT_DATASET}_bound_intersected.bed"
+intersect "$BOUND_DHS_CNTR" "$BOUND_MUT_INTR" "$BOUND_MUT_CNTR" "$BOUND_MUT_CNTR_PRO" "$BOUND_MUT_CNTR_ENH"
 
-UNBOUND_MUT_INTR="./data/supplementary/ssm.open.${RUN_ID}_${MUT_DATASET}_intersected_unbound.bed"
-intersect "$UNBOUND_DHS" "$UNBOUND_MUT_INTR" "$UNBOUND_MUT_CNTR" "$UNBOUND_MUT_CNTR_PRO" "$UNBOUND_MUT_CNTR_ENH"
+UNBOUND_MUT_INTR="./data/supplementary/ssm.open.${RUN_ID}_${MUT_DATASET}_unbound_intersected.bed"
+intersect "$UNBOUND_DHS_CNTR" "$UNBOUND_MUT_INTR" "$UNBOUND_MUT_CNTR" "$UNBOUND_MUT_CNTR_PRO" "$UNBOUND_MUT_CNTR_ENH"
 
 ## *_MUT_INTR:
 #  Mutations in TFBS/non-TFBS regions
