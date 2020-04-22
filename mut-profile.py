@@ -63,6 +63,7 @@ def plot_dists(
     h1=0.2,
     h2=0.6,
     w2=0.5,
+    center_lims=True,
     save_fig=True,
 ):
     fig = plt.figure(figsize=figsize)
@@ -80,14 +81,21 @@ def plot_dists(
     ax1.plot(X1, y1)
 
     # Unbound DHS
+    X1_2 = []
+    y1_2 = []
     if counts_2 is not None and counts_2_by_tf is not None:
         X1_2 = sorted([int(dist) for dist in counts_2])
         y1_2 = [counts_2[dist] for dist in X1_2]
         ax1.plot(X1_2, y1_2)
 
     # Style large graph
-    ax1.set_xlim(-1000, 1000)
-    ax1.set_ylim(0, None)
+    if center_lims:
+        ax1.set_xlim(-1000, 1000)
+    # else:
+    #     min_lim = min(min(X1), min(X1_2)) if len(X1_2) > 0 else min(X1)
+    #     max_lim = max(max(X1), max(X1_2)) if len(X1_2) > 0 else max(X1)
+    #     ax1.set_xlim(min_lim, max_lim)
+    ax1.set_ylim(0)
     ax1.set_xlabel("Distance from TFBS center (bp)")
     ax1.set_ylabel("Number of mutations")
     if name is None:
@@ -109,13 +117,20 @@ def plot_dists(
         ax2.plot(X2, y2)
 
         # Unbound DHS
+        X2_2 = []
+        y2_2 = []
         if counts_2 is not None and counts_2_by_tf is not None and tf in counts_2_by_tf:
             X2_2 = sorted([int(dist) for dist in counts_2_by_tf[tf]])
             y2_2 = [counts_2_by_tf[tf][dist] for dist in X2_2]
             ax2.plot(X2_2, y2_2)
 
         # Style small graph
-        ax2.set_xlim(-1000, 1000)
+        if center_lims:
+            ax2.set_xlim(-1000, 1000)
+        # else:
+        #     min_lim = min(min(X2), min(X2_2)) if len(X2_2) > 0 else min(X2)
+        #     max_lim = max(max(X2), max(X2_2)) if len(X2_2) > 0 else max(X2)
+        #     ax2.set_xlim(min_lim, max_lim)
         ax2.set_ylim(0)
         ax2.set_title(tf)
         if not ax2.is_last_row():
@@ -207,6 +222,7 @@ for name in all_names:
             all_counts_2[name],
             all_counts_2_by_tf[name],
             name=name,
+            center_lims=False,
         )
     else:
         all_counts[name], all_counts_by_tf[name] = get_dists(name)
