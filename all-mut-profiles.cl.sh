@@ -9,14 +9,14 @@
 
 ### Calls mut-profile_TYPE.cl.sh on all datasets, as specified.
 
-RUN_TYPE="merged-bg"  # run type
+RUN_TYPE="all"  # run type
 
 TFBS_TYPE="proximal"  # proximal, distal
 TFBS_DHS="DHS"  # DHS, noDHS
 CDS_FILE_ID=""  # coding regions file ID
 
-WHICH_DATA="dhs"  # data group name
-PACKAGE="bedtools"  # package to use
+WHICH_DATA="small"  # data group name
+PACKAGE="bedops"  # package to use
 
 # Debug flags: 0 for true, 1 for false
 _GENERATE_PROFILES=0

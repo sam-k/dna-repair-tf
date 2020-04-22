@@ -4,8 +4,8 @@
 #SBATCH --mail-type END,FAIL
 #SBATCH --time 12:00:00
 #SBATCH -c 4
-#SBATCH --output logs/mut-profile_all.out.txt
-#SBATCH --error logs/mut-profile_all.err.txt
+#SBATCH --output logs/OUT_mut-profile_all.txt
+#SBATCH --error logs/ERR_mut-profile_all.txt
 
 ## Intersects somatic mutation coords w/ TFBS coords.
 #  Does not produce intermediate files.
@@ -90,7 +90,7 @@ BENCHMARK_FILE="./benchmark/${RUN_ID}.txt"
 # Transform TFBSs into TFBS centers ±1000 bp.
 TFBS_CNTR="./data/supplementary/${TFBS_TYPE}TFBS-${TFBS_DHS}_${TFBS_DATASET}_center1000.bed"
 awk '{center=int(($2+$3)/2); print $1"\t"(center-1000)"\t"(center+1000)"\t"$4}' "$TFBS_FILE" |
-  sort -V > "$TFBS_CNTR"
+  sort -k1,1 -k2 > "$TFBS_CNTR"
 
 ## TFBS_CNTR:
 #  Region of ±1000 bp around center of each TFBS
@@ -109,12 +109,12 @@ cut -f9-11,16,17 "$MUT_FILE" |  # select cols
   sed -e 1d |  # remove header
   sed -e $'s/\t/>/4' |  # preprocess to BED format
   sed -e 's/^/chr/' |
-  sort -V |
+  sort -k1,1 -k2 |
   uniq | # remove duplicates
   if [[ "$PACKAGE" == "bedtools" ]]; then
     bedtools intersect -a - -b "$TFBS_CNTR" -wa -wb -sorted -g "$GEN_FILE"  # intersect with TFBS ±1000bp regions
   elif [[ "$PACKAGE" == "bedops" ]]; then
-    bedmap --range 1 --echo --echo-map test1.bed test2.bed |
+    bedmap --range 1 --echo --echo-map - "$TFBS_CNTR" |
     sed -e '/|$/d' |
     awk 'BEGIN{FS="|"; OFS="\t";} {
           n=split($2, tfs, ";");
@@ -125,7 +125,7 @@ cut -f9-11,16,17 "$MUT_FILE" |  # select cols
   fi |
   cut -f1-2,4,6,8 |
   awk '{dist=$2-$4-1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |
-  sort -V > "$MUT_CNTR"  # no uniq!!
+  sort -k1,1 -k2 > "$MUT_CNTR"  # no uniq!!
 
 ## MUT_CNTR:
 #  Mut locations as distances from centers of ±1000bp TFBS regions
