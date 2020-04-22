@@ -114,11 +114,18 @@ cut -f9-11,16,17 "$MUT_FILE" |  # select cols
   if [[ "$PACKAGE" == "bedtools" ]]; then
     bedtools intersect -a - -b "$TFBS_CNTR" -wa -wb -sorted -g "$GEN_FILE"  # intersect with TFBS ±1000bp regions
   elif [[ "$PACKAGE" == "bedops" ]]; then
-    exit 1
+    bedmap --range 1 --echo --echo-map test1.bed test2.bed |
+    sed -e '/|$/d' |
+    awk 'BEGIN{FS="|"; OFS="\t";} {
+          n=split($2, tfs, ";");
+          for(i=1;i<=n;i++) {
+            print $1,tfs[i];
+          }
+        }'
   fi |
   cut -f1-2,4,6,8 |
   awk '{dist=$2-$4-1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |
-  sort -V > "$MUT_CNTR"
+  sort -V > "$MUT_CNTR"  # no uniq!!
 
 ## MUT_CNTR:
 #  Mut locations as distances from centers of ±1000bp TFBS regions
