@@ -149,6 +149,7 @@ sort -V "$MERGED_TFBS_FILE" |  # sort
   fi |
   sort -V |
   uniq > "$BOUND_DHS"
+# BOUND_DHS_CNTR="$BOUND_DHS"
 BOUND_DHS_CNTR="./data/supplementary/boundDHS_${TFBS_DATASET}_center1000.bed"
 awk '{center=int(($2+$3)/2); print $1"\t"(center>=1000 ? center-1000 : 0)"\t"(center+1000)"\t"$4}' "$BOUND_DHS" |  # transform into centers ±1000 bp
   sort -V |
@@ -160,6 +161,7 @@ bedtools subtract -a "$TOTAL_DHS" -b "$BOUND_DHS" |
   cut -f1-4 |
   sort -V |
   uniq > "$UNBOUND_DHS"
+# UNBOUND_DHS_CNTR="$UNBOUND_DHS"
 UNBOUND_DHS_CNTR="./data/supplementary/unboundDHS_${TFBS_DATASET}_center1000.bed"
 awk '{center=int(($2+$3)/2); print $1"\t"(center>=1000 ? center-1000 : 0)"\t"(center+1000)"\t"$4}' "$UNBOUND_DHS" |  # transform into centers ±1000 bp
   sort -V |
