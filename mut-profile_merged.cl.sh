@@ -37,7 +37,7 @@ case "$TFBS_DATASET" in
 esac
 
 # Import data
-MUT_FILE="../datasets/ssm/simple_somatic_mutation.open.${MUT_DATASET}.tsv"
+MUT_FILE="../datasets/ssm/simple_somatic_mutation.open.${MUT_DATASET}_sample.tsv"
 MERGED_TFBS_FILE="../datasets/tfbs/merged_ENCODE.tf.bound.union.bed"
 DHS_FILE="../datasets/total_dhs/${DHS_ID}-DNase.hotspot.fdr0.01.peaks.v2.bed"
 TSS_FILE="../datasets/refseq_TSS_hg19_170929.bed"
@@ -130,26 +130,29 @@ BENCHMARK_FILE="./benchmark/${RUN_ID}.txt"
 
 
 
-# Sort DHS_FILE lexicographically before intersecting.
-DHS_SORTED="./data/supplementary/${DHS_ID}-DNase.hotspot.fdr0.01.peaks.v2_sorted.bed"
-sort -V "$DHS_FILE" |  # sort
-  uniq > "$DHS_SORTED"  # remove duplicates
-
 # Build active TFBSs from merged TFBSs and cancer-specific DHSs.
 TFBS_FILE="./data/supplementary/activeTFBS_${TFBS_DATASET}.bed"
-sort -V "$MERGED_TFBS_FILE" |  # sort
-  uniq |  # remove duplicates
+sort -k1,1 -k2n "$MERGED_TFBS_FILE" |  # sort
   if [[ "$PACKAGE" == "bedtools" ]]; then
-    bedtools intersect -a - -b "$DHS_SORTED" -wa -sorted -g "$GEN_FILE"  # intersect with cacner-specific DHSs
+    bedtools intersect -a - -b "$DHS_FILE" -wa -sorted -g "$GEN_FILE"  # intersect with cacner-specific DHSs
   elif [[ "$PACKAGE" == "bedops" ]]; then
-    exit 1 # not yet implemented
-  fi |
-  sort -V > "$TFBS_FILE"
+    bedmap --range 1 --echo --echo-map - "$DHS_FILE" |
+      sed -e '/|$/d' |
+      awk 'BEGIN{FS="|"; OFS="\t";} {
+        n=split($2, tfs, ";");
+        for(i=1;i<=n;i++) {
+          print $1;
+        }
+      }'
+  fi > "$TFBS_FILE"
 
 # Transform TFBSs into TFBS centers ±1000 bp.
 TFBS_CNTR="./data/supplementary/activeTFBS_${TFBS_DATASET}_center1000.bed"
-awk '{center=int(($2+$3)/2); print $1"\t"(center>=1000 ? center-1000 : 0)"\t"(center+1000)"\t"$4}' "$TFBS_FILE" |
-  sort -V |
+awk 'BEGIN{OFS="\t";} {
+  center=int(($2+$3)/2);
+  print $1,(center>=1000 ? center-1000 : 0),(center+1000),$4
+}' "$TFBS_FILE" |
+  sort -k1,1 -k2n |
   uniq > "$TFBS_CNTR"
 
 ## TFBS_FILE, TFBS_CNTR:
@@ -163,8 +166,10 @@ awk '{center=int(($2+$3)/2); print $1"\t"(center>=1000 ? center-1000 : 0)"\t"(ce
 # Transform TSSs into their upstream regions.
 TSS_REG="./data/supplementary/refseq_TSS_up${UPSTREAM}-down${DOWNSTREAM}.bed"
 cut -f1-2 "$TSS_FILE" |  # select cols
- awk -v up=$UPSTREAM -v down=$DOWNSTREAM '{print $1"\t"($2>=up ? $2-up : 0)"\t"($2+down)}' |
- sort -V |  # sort
+  awk -v up=$UPSTREAM -v down=$DOWNSTREAM 'BEGIN{OFS="\t";} {
+    print $1,($2>=up ? $2-up : 0),($2+down)
+  }' |
+ sort -k1,1 -k2n |  # sort
  uniq > "$TSS_REG"
 
 ## TSS_REG:
@@ -177,7 +182,7 @@ cut -f1-2 "$TSS_FILE" |  # select cols
 ENH_PROC="./data/supplementary/permissive_enhancers_proc.bed"
 cut -f1-3 "$ENH_FILE" |
   tail -n +2 |  # remove header
-  sort -V > "$ENH_PROC"
+  sort -k1,1 -k2n > "$ENH_PROC"
 
 ## ENH_PROC:
 #  Enhancer data without headers
@@ -198,12 +203,19 @@ cut -f9-11,16,17 "$MUT_FILE" |  # select cols
   sed -e 1d |  # remove header
   sed -e $'s/\t/>/4' |  # preprocess to BED format
   sed -e 's/^/chr/' |
-  sort -V |
-  uniq | # remove duplicates
+  sort -k1,1 -k2n |
+  uniq | # remove possible duplicates
   if [[ "$PACKAGE" == "bedtools" ]]; then
     bedtools intersect -a - -b "$TFBS_CNTR" -wa -wb -sorted -g "$GEN_FILE"  # intersect with TFBS ±1000bp regions
   elif [[ "$PACKAGE" == "bedops" ]]; then
-    exit 1  # not yet implemented
+    bedmap --range 1 --echo --echo-map - "$TFBS_CNTR" |
+      sed -e '/|$/d' |
+      awk 'BEGIN{FS="|"; OFS="\t";} {
+        n=split($2, tfs, ";");
+        for(i=1;i<=n;i++) {
+          print $1,tfs[i];
+        }
+      }'
   fi > "$MUT_INTR"
 
 ## MUT_INTR:
@@ -220,7 +232,7 @@ cut -f9-11,16,17 "$MUT_FILE" |  # select cols
 # Reexpress mut locations as distances from centers of ±1000bp TFBS regions
 cut -f1-2,4,7-8 "$MUT_INTR" |
   awk '{dist=$2-$4+1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |
-  sort -V > "$MUT_CNTR"
+  sort -k1,1 -k2n > "$MUT_CNTR"
 
 ## MUT_CNTR:
 #  Mut locations as distances from centers of ±1000bp TFBS regions
@@ -238,11 +250,18 @@ intersect_further() {
   if [[ "$PACKAGE" == "bedtools" ]]; then
     bedtools intersect -a "$MUT_INTR" -b "$in_file" -wa -sorted -g "$GEN_FILE"
   elif [[ "$PACKAGE" == "bedops" ]]; then
-    exit 1  # not yet implemented
+    bedmap --range 1 --echo --echo-map - "$TFBS_CNTR" |
+      sed -e '/|$/d' |
+      awk 'BEGIN{FS="|"; OFS="\t";} {
+            n=split($2, tfs, ";");
+            for(i=1;i<=n;i++) {
+              print $1;
+            }
+          }'
   fi |
     cut -f1-2,4,7-8 |
     awk '{dist=$2-$4+1000; print $1"\t"dist"\t"dist"\t"$3"\t"$5}' |
-    sort -V |
+    sort -k1,1 -k2n |
     uniq > "$out_file"
 }
 intersect_further "$TSS_REG" "$MUT_CNTR_PRO"

@@ -111,8 +111,8 @@ BENCHMARK_FILE="./benchmark/${RUN_ID}.txt"
 #  1. chromosome
 #  2. chromosome_start
 #  3. chromosome_end
-#  4. ?
-#  5. ?
+#  4. peak_tag_density
+#  5. z_score
 
 ## TSS_FILE:
 #  Transcription start sites
@@ -143,7 +143,7 @@ BOUND_DHS="./data/supplementary/boundDHS_${TFBS_DATASET}.bed"
 sort -V "$MERGED_TFBS_FILE" |  # sort
   uniq |  # remove duplicates
   if [[ "$PACKAGE" == "bedtools" ]]; then
-    bedtools intersect -a - -b "$TOTAL_DHS" -wa -sorted -g "$GEN_FILE"  # intersect with cacner-specific DHSs
+    bedtools intersect -a - -b "$TOTAL_DHS" -wa -sorted -g "$GEN_FILE"  # intersect with cancer-specific DHSs
   elif [[ "$PACKAGE" == "bedops" ]]; then
     exit 1 # not yet implemented
   fi |

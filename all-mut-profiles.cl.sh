@@ -15,13 +15,13 @@ TFBS_TYPE="proximal"  # proximal, distal
 TFBS_DHS="DHS"  # DHS, noDHS
 CDS_FILE_ID=""  # coding regions file ID
 
-WHICH_DATA="small"  # data group name
-PACKAGE="bedops"  # package to use
+WHICH_DATA="MELA"  # data group name
+PACKAGE="bedops"
 
 # Debug flags: 0 for true, 1 for false
 _GENERATE_PROFILES=0
-_GENERATE_FIGURES=0
-_BENCHMARK=1
+_GENERATE_FIGURES=1
+_BENCHMARK=0
 
 FILENAME="./mut-profile_${RUN_TYPE}.cl.sh"
 
@@ -98,7 +98,7 @@ check_args "TFBS_TYPE" "$TFBS_TYPE" args 0
 declare -a args=("" "1" "2")
 check_args "CDS_FILE_ID" "$CDS_FILE_ID" args 0
 
-declare -a args=("bedops" "bedtools")
+declare -a args=("bedops" "bedtools" "bedtools-sorted" "bedtools-unsorted")
 check_args "PACKAGE" "$PACKAGE" args 0
 
 # Select datasets to use

@@ -33,7 +33,7 @@ GEN_FILE="../datasets/hg19/bedtools_hg19_sorted.txt"
 
 # Export data
 MUT_CNTR="./data/ssm.open.${TFBS_TYPE}-${TFBS_DHS}_${RUN_TYPE}_${MUT_DATASET}_centered.bed"
-BENCHMARK_FILE="./benchmark/${RUN_ID}.txt"
+BENCHMARK_FILE="./benchmark/${RUN_ID}_${PACKAGE}.txt"
 
 ## MUT_FILE:
 #  Mutation locations on patient genomes
@@ -111,8 +111,10 @@ cut -f9-11,16,17 "$MUT_FILE" |  # select cols
   sed -e 's/^/chr/' |
   sort -k1,1 -k2 |
   uniq | # remove duplicates
-  if [[ "$PACKAGE" == "bedtools" ]]; then
+  if [[ "$PACKAGE" == "bedtools" || "$PACKAGE" == "bedtools-sorted" ]]; then
     bedtools intersect -a - -b "$TFBS_CNTR" -wa -wb -sorted -g "$GEN_FILE"  # intersect with TFBS ±1000bp regions
+  elif [[ "$PACKAGE" == "bedtools-unsorted" ]]; then
+    bedtools intersect -a - -b "$TFBS_CNTR" -wa -wb  # intersect with TFBS ±1000bp regions
   elif [[ "$PACKAGE" == "bedops" ]]; then
     bedmap --range 1 --echo --echo-map - "$TFBS_CNTR" |
     sed -e '/|$/d' |
