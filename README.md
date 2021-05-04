@@ -1,7 +1,13 @@
 # dna-repair-tf
-Genomic analysis of decreased DNA repair at TF-binding sites
+Genomic analysis of decreased DNA repair at TF-binding sites.
 
-Description coming soon!
+The full report can be found here: [Creating and Measuring Mutation Profiles Within TFBSs](https://www.samkim.io/#/post/tfbs-research-2020)
+
+### Timeline
+
+:checkered_flag: This independent research project was **started** on Jan. 20, 2020, under the guidance of [Dr. Raluca Gordân](https://gordanlab.cs.duke.edu/) and [Harshit Sahay](https://genome.duke.edu/directory/cbb-phd-student/harshit-sahay) at Duke University.
+
+:white_check_mark: This project was **finished** on May 3, 2020.
 
 ## Data Sources
 
